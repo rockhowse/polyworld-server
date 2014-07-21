@@ -10034,9 +10034,7 @@ main.o: main/main.cp ../Qt/5.3/gcc_64/include/QtOpenGL/qgl.h \
 		environment/food.h \
 		environment/brick.h \
 		environment/BrickPatch.h \
-		ui/SimulationController.h \
-		ui/term/TerminalUI.h \
-		ui/gui/NetworkDialog.h \
+                ui/SimulationController.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/QWidget \
 		network/NetworkServer.h \
 		../Qt/5.3/gcc_64/include/QtCore/QStringList \
@@ -12276,7 +12274,6 @@ MainWindow.o: ui/gui/MainWindow.cp ui/gui/MainWindow.h \
 		ui/gui/StatusTextMonitorView.h \
 		../Qt/5.3/gcc_64/include/QtGui/QFont \
 		ui/gui/ToggleWidgetOpenAction.h \
-		ui/gui/NetworkDialog.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/QWidget \
 		network/NetworkServer.h \
 		../Qt/5.3/gcc_64/include/QtCore/QStringList \
@@ -13648,13 +13645,11 @@ NetworkDialog.o: ui/network/NetworkDialog.cpp ../Qt/5.3/gcc_64/include/QtGui/QtG
 		../Qt/5.3/gcc_64/include/QtNetwork/qsslcipher.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/qsslkey.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/qtnetworkversion.h \
-		ui/gui/NetworkDialog.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/QWidget \
 		../Qt/5.3/gcc_64/include/QtWidgets/qwidget.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/qsizepolicy.h \
 		network/NetworkServer.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/QTcpServer \
-		PolyworldServer.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/QtWidgets \
 		../Qt/5.3/gcc_64/include/QtWidgets/QtWidgetsDepends \
 		../Qt/5.3/gcc_64/include/QtWidgets/qaccessiblewidget.h \

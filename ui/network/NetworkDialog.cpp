@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "NetworkDialog.h"
-#include "PolyworldServer.h"
+#include "NetworkServer.h"
 #include <QtWidgets>
 #include <QtNetwork>
 

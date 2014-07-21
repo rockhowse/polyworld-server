@@ -17,6 +17,9 @@
 #include "SimulationController.h"
 #include "TerminalUI.h"
 
+// Network
+#include "NetworkDialog.h"
+
 
 using namespace std;
 
@@ -134,6 +137,14 @@ int main( int argc, char** argv )
 	if( ui == "gui" )
 	{
 		MainWindow *mainWindow = new MainWindow( simulationController );
+
+        // network code
+        NetworkDialog networkDialog;
+    #ifdef Q_OS_SYMBIAN
+        networkDialog.showMaximized();
+    #else
+        networkDialog.show();
+    #endif
 		simulationController->start();
 		exitval = app.exec();
 		delete mainWindow;

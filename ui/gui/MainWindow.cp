@@ -27,6 +27,9 @@
 #include "StatusTextMonitorView.h"
 #include "ToggleWidgetOpenAction.h"
 
+// added for network code
+#include "NetworkDialog.h"
+
 #if __APPLE__
 static QMenuBar *menuBar = NULL;
 #endif

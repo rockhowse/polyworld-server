@@ -2,7 +2,7 @@ TEMPLATE = app
 
 CONFIG += qt warn_on debug
 
-QT += opengl
+QT += opengl network
 
 # qmake selects gcc for cp files
 # Some of the code depends on C++11 standard so set it here
@@ -26,9 +26,11 @@ INCLUDEPATH += . \
                graphics \
 	       logs \
 	       monitor \
+               network \
 	       proplib \
                ui \
 	       ui/gui \
+               ui/network \
 	       ui/term \
                utils \
 	       /usr/include/python2.7/
@@ -164,7 +166,10 @@ HEADERS += app/Simulation.h \
     utils/PwMovieUtils.h \
     utils/Mutex.h \
     utils/Events.h \
-    utils/AbstractFile.h
+    utils/AbstractFile.h \
+    ui/network/NetworkDialog.h \
+    network/NetworkServer.h \
+    network/NetworkThread.h
            
 SOURCES += app/Simulation.cp \
     app/simtypes.cp \
@@ -279,7 +284,10 @@ SOURCES += app/Simulation.cp \
     utils/RandomNumberGenerator.cp \
     utils/PwMovieUtils.cp \
     utils/Mutex.cp \
-    utils/AbstractFile.cp
+    utils/AbstractFile.cp \
+    ui/network/NetworkDialog.cpp \
+    network/NetworkServer.cp \
+    network/NetworkThread.cpp
 
 OTHER_FILES += \
     Makefile \

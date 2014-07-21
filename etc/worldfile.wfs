@@ -1,0 +1,2544 @@
+##########################################################################
+#
+#    Tabs aren't allowed in this schema file. This file serves as a
+# reference and must format well for all people.
+#
+#    Parameters are organized within sections. You may quickly jump to
+# sections by searching for the string SECTION.
+#
+#    The parser of this file is not very flexible in how it processes
+# syntax. Follow the conventions you see in this file and you will be
+# fine. For example, put an opening brace on its own line as done in our
+# C++ code, and no soup for you!
+#
+#
+# --- QUICK REFERENCE ---
+#
+#   min/max = inclusive min/max
+#
+#   exmin/exmax = exclusive min/max
+#
+#   assert = expression that results in error if evaluates to False.
+#
+#   $[...] = logical symbol reference in cppsym:
+#
+#      $[sim]: TSimulation pointer.
+#      $[index]: index of element in array.
+#      $[ancestor]: cppsym value of nearest ancestor.
+#      $[gene, GENE_NAME, MEMBER]: member of gene object,
+#                                  where MEMBER can be: min, max.
+##########################################################################
+
+#-------------------------------------------------------------------
+# SECTION Custom Datatypes
+#-------------------------------------------------------------------
+
+class Color {
+  R {
+    type    Float
+    min     0.0
+    max     1.0
+    default 0.0
+  }
+  G {
+    type    Float
+    min     0.0
+    max     1.0
+    default 0.0
+  }
+  B {
+    type    Float
+    min     0.0
+    max     1.0
+    default 0.0
+  }
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Simulation meta-information
+#-------------------------------------------------------------------
+
+PassiveLockstep {
+  type    Bool
+  default False
+}
+
+InitSeed {
+  type    Int
+  default 42    # applied before agents, genomes, brains, food, bricks, etc. are initialized
+}
+
+PositionSeed {
+  type    Int   # not used
+  default 42    # intended to be applied before agents, food, bricks, etc.
+}               # are assigned their initial random positions in the world
+
+SimulationSeed {
+  type    Int
+  default 0             # applied just before first step of simulation (if == 0 seed is not used)
+}
+
+GenomeLayout {
+  type    Enum
+  defaults {
+    default NeurGroup if BrainArchitecture == BrainArchitecture.Groups else None
+    legacy None
+  }
+  enum    Values {
+    NeurGroup,
+    None
+  }
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Simulation parameters -- Primary
+#-------------------------------------------------------------------
+
+MaxSteps {
+  type    Int
+  default 30000
+  min   0
+}
+
+MinAgents {
+  type    Int
+  default 1
+  min     0
+}
+
+MaxAgents {
+  type    Int
+  default 300
+  min     MinAgents
+}
+
+InitAgents {
+  type    Int
+  default 1
+  min     MinAgents
+  max     MaxAgents
+}
+
+SeedAgents {
+  type    Int
+  defaults { default InitAgents; legacy 0 }
+  min     0
+  max     InitAgents
+}
+
+SeedMutationProbability {
+  type    Float
+  default 0.0
+  min     0.0
+  max     1.0
+}
+
+InitFood {
+  type    Int
+  default ( MinFood if MinFood > 0 else 90 )
+  min     MinFood
+  max     MaxFood
+}
+
+MinFood {
+  type    Int
+  defaults { default 0; legacy 90 }
+  min     0
+}
+
+MaxFood {
+  type    Int
+  default 120
+  min     MinFood
+}
+
+MaxFoodGrown {
+  type    Int
+  defaults { default MaxFood; legacy MinFood }
+  max     MaxFood
+}
+
+FoodGrowthRate {
+  type    Float
+  default 0.1   # decimal part gives probability each step (depending on FoodGrowthModel)
+  min     0.0
+  max     10.0  # integer part is raw count of pieces to add per step
+}
+
+FoodGrowthModel {
+  type    Enum
+  defaults { default MaxIndependent; legacy MaxRelative }
+  enum    Values {
+    MaxRelative,     # decimal part multiplies (maxGrown - current) to give probability each step
+    MaxIndependent   # decimal part is the raw probability each step
+  }
+}
+
+FoodRemoveEnergy {
+  type    Float
+  default 0.0
+}
+
+FoodRemoveFirstEat {
+  type    Bool
+  default False
+}
+
+FoodMaxLifeSpan {
+  type    Int
+  default 0             # 0 means infinity
+  min 0
+}
+
+MinFoodEnergy {
+  type    Float
+  default 200.0
+  min     0.0
+}
+
+MaxFoodEnergy {
+  type    Float
+  default 1000.0
+  min     MinFoodEnergy
+}
+
+RatioBarrierPositions {
+  type    Bool
+  defaults { default True; legacy False }
+}
+
+NumEnergyTypes {
+  type    Int
+  default 1
+  min     1
+}
+
+#------------------------------
+#--- Food Types
+#------------------------------
+FoodTypes {
+  type    Array
+  default [
+    {
+      Name "Standard"
+      EnergyPolarity [ 1 ]
+    }
+  ]
+
+  element {
+    type    Object
+    properties {
+
+      Name {
+        type    String
+      }
+
+      EnergyPolarity {
+        type    Array
+        min     NumEnergyTypes
+        max     NumEnergyTypes
+        element {
+          type    Int
+          min     -1
+          max     1
+        }
+      }
+
+      # Optional override of global FoodColor
+      FoodColor {
+        type     Color
+        optional True
+      }
+
+    }
+  }
+}
+
+#------------------------------
+#--- Agent Metabolisms
+#------------------------------
+AgentMetabolisms {
+  type    Array
+  min     1
+  default [
+    {
+      EnergyPolarity [ 1 ]
+    }
+  ]
+
+  element {
+    type    Object
+    cppsym  "Metabolism::get( $[index] )"
+    properties {
+
+      # If named "Null", will be assigned name "MetabolismN"
+      Name {
+        type    String
+        default "Null"
+      }
+
+      EnergyPolarity {
+        type    Array
+        min     NumEnergyTypes
+        max     NumEnergyTypes
+        default [ 1 ]
+        element {
+          type    Int
+          min     -1
+          max     1
+        }
+      }
+
+      CarcassFoodTypeMode {
+        type    Enum
+        default FindEnergyPolarity
+        enum    Values {
+          None,
+          FoodTypeName,
+          FindEnergyPolarity
+        }
+      }
+
+      CarcassFoodTypeName {
+        type    String
+        default "Standard"
+      }
+
+      MinEatAge {
+        type    Float
+        min     0
+        max     MaxLifeSpan
+        default 0
+	cppsym  "$[ancestor]->minEatAge"
+      }
+
+      EatMultiplier {
+        type    Array
+        min     NumEnergyTypes
+        max     NumEnergyTypes
+        default [ 1 ]
+        cppsym  "$[ancestor]->eatMultiplier"
+        element {
+          type    Float
+          cppsym  "$[ancestor].values[ $[index] ]"
+        }
+      }
+
+      EnergyDelta {
+        type    Array
+        min     NumEnergyTypes
+        max     NumEnergyTypes
+        default [ 0 ]
+        cppsym  "$[ancestor]->energyDelta"
+        element {
+          type    Float
+          cppsym  "$[ancestor].values[ $[index] ]"
+        }
+      }
+
+      MetabolismAgentCount {
+        type    Int
+        runtime True
+        cppsym  "$[sim]->fNumberAliveWithMetabolism[ $[ancestor]->index ]"
+      }
+
+    }
+  }
+}
+
+AgentMetabolismSelectionMode {
+  type    Enum
+  enum    Values {
+    Gene,
+    Random
+  }
+  default Gene
+}
+
+#------------------------------
+# Barriers
+#------------------------------
+Barriers {
+  type    Array
+
+  default [
+    {
+      X1    (  0.3333 if RatioBarrierPositions else  (0.3333 * WorldSize) )
+      Z1    ( -1.0    if RatioBarrierPositions else -WorldSize )
+      X2    (  0.3333 if RatioBarrierPositions else  (0.3333 * WorldSize) )
+      Z2    ( -0.1    if RatioBarrierPositions else -0.1*WorldSize )
+    }
+    ,
+    {
+      X1    (  0.6667 if RatioBarrierPositions else  (0.6667 * WorldSize) )
+      Z1    ( -1.0    if RatioBarrierPositions else -WorldSize )
+      X2    (  0.6667 if RatioBarrierPositions else  (0.6667 * WorldSize) )
+      Z2    ( -0.1    if RatioBarrierPositions else -0.1*WorldSize )
+    }
+ ]
+
+  element {
+    type    Object
+    cppsym  "barrier::gBarriers[ $[index] ]"
+
+    properties {
+      X1 {
+        type    Float
+        min     0.0
+        max     ( 1.0 if RatioBarrierPositions else WorldSize )
+        cppsym  "$[ancestor]->getPosition().xa"
+      }
+      Z1 {
+        type    Float
+        max     0.0
+        min     ( -1.0 if RatioBarrierPositions else -WorldSize )
+        cppsym  "$[ancestor]->getPosition().za"
+      }
+
+      X2 {
+        type    Float
+        min     0.0
+        max     ( 1.0 if RatioBarrierPositions else WorldSize )
+        cppsym  "$[ancestor]->getPosition().xb"
+      }
+      Z2 {
+        type    Float
+        max     0.0
+        min     ( -1.0 if RatioBarrierPositions else -WorldSize )
+        cppsym  "$[ancestor]->getPosition().zb"
+      }
+    }
+  }
+}
+
+#------------------------------
+#--- Domains
+#------------------------------
+Domains {
+  type    Array
+
+  default [
+    {
+      CenterX                   0.5
+      CenterZ                   0.5
+      SizeX                     1.0
+      SizeZ                     1.0
+      FoodPatches [
+        {
+          FoodFraction              0.2
+          MaxFoodFraction           1.0
+          MaxFoodGrownFraction      1.0
+          CenterX                   0.5
+          CenterZ                   0.05
+          SizeX                     1.0
+          SizeZ                     0.1
+        }
+        ,
+        {
+          FoodFraction              0.8
+          MaxFoodFraction           1.0
+          MaxFoodGrownFraction      1.0
+          CenterX                   0.5
+          CenterZ                   0.8
+          SizeX                     1.0
+          SizeZ                     0.4
+        }
+      ]
+    }
+  ]
+
+  exmin   0
+  max     10 # This number comes from the MAXDOMAINS symbol in Simulation.h. It is critical they match.
+
+  element {
+    type    Object
+    cppsym  "$[sim]->fDomains[ $[index] ]"
+
+    properties {
+
+      CenterX {
+        type    Float
+        default 0.5
+        exmin   0.0
+        exmax   1.0
+      }
+
+      CenterZ {
+        type    Float
+        default 0.5
+        exmin   0.0
+        exmax   1.0
+      }
+
+      SizeX {
+        type    Float
+        default 1.0
+        exmin   0.0
+        max     1.0
+      }
+
+      SizeZ {
+        type    Float
+        default 1.0
+        exmin   0.0
+        max     1.0
+      }
+
+      MinAgentsFraction {
+        type    Float
+        default -1.0
+        max     1.0
+        assert  ( (MinAgentsFraction == -1.0) or (MinAgentsFraction >= 0.0) )
+      }
+
+      MaxAgentsFraction {
+        type    Float
+        default -1.0
+        max     1.0
+        assert  ( (MaxAgentsFraction == -1.0) or (MaxAgentsFraction >= 0.0) )
+      }
+
+      InitAgentsFraction {
+        type    Float
+        default -1.0
+        max     1.0
+        assert  ( (InitAgentsFraction == -1.0) or (InitAgentsFraction >= 0.0) )
+      }
+
+      InitSeedsFraction {
+        type    Float
+        default -1.0
+        max     1.0
+        assert  ( (InitSeedsFraction == -1.0) or (InitSeedsFraction >= 0.0) )
+      }
+
+      ProbabilityOfMutatingSeeds {
+        type    Float
+        default -1.0
+        max     1.0
+        assert  ( (ProbabilityOfMutatingSeeds == -1.0) or (ProbabilityOfMutatingSeeds >= 0.0) )
+      }
+
+      InitFoodFraction {
+        type    Float
+        default -1.0
+        max     1.0
+        assert  ( (InitFoodFraction == -1.0) or (InitFoodFraction >= 0.0) )
+      }
+
+      MinFoodFraction {
+        type    Float
+        default -1.0
+        max     1.0
+        assert  ( (MinFoodFraction == -1.0) or (MinFoodFraction >= 0.0) )
+      }
+
+      MaxFoodFraction {
+        type    Float
+        default -1.0
+        max     1.0
+        assert  ( (MaxFoodFraction == -1.0) or (MaxFoodFraction >= 0.0) )
+      }
+
+      MaxFoodGrownFraction {
+        type    Float
+        default -1.0
+        max     1.0
+        assert  ( (MaxFoodGrownFraction == -1.0) or (MaxFoodGrownFraction >= 0.0) )
+      }
+
+      FoodRate {
+        type    Float
+        default -1.0
+        max     1.0
+        assert  ( (FoodRate == -1.0) or (FoodRate >= 0.0) )
+      }
+
+      #------------------------------
+      # FoodPatches
+      #------------------------------
+      FoodPatches {
+        type    Array
+
+        element {
+          type    Object
+          cppsym  "$[ancestor].fFoodPatches[ $[index] ]"
+
+          properties { # Please pay attention to min/max/assert logic. I didn't put enough thought into it.
+
+            FoodTypeName {
+              type    String
+              default "Standard"
+            }
+
+            FoodFraction {
+              type    Float
+              exmin   0.0
+              max     1.0
+            }
+
+            InitFoodFraction {
+              type    Float
+              default -1.0
+              max     1.0
+              assert  ( (InitFoodFraction == -1.0) or (InitFoodFraction >= 0.0) )
+            }
+
+            MinFoodFraction {
+              type    Float
+              default -1.0
+              max     1.0
+              assert  ( (MinFoodFraction == -1.0) or (MinFoodFraction >= 0.0) )
+            }
+
+            MaxFoodFraction {
+              type    Float
+              default -1.0
+              max     1.0
+              assert  ( (MaxFoodFraction == -1.0) or (MaxFoodFraction >= 0.0) )
+            }
+
+            MaxFoodGrownFraction {
+              type    Float
+              default -1.0
+              max     1.0
+              assert  ( (MaxFoodGrownFraction == -1.0) or (MaxFoodGrownFraction >= 0.0) )
+            }
+
+            FoodRate {
+              type    Float
+              default -1.0
+              max     1.0
+              assert  ( (FoodRate == -1.0) or (FoodRate >= 0.0) )
+            }
+
+            CenterX {
+              type    Float
+              default 0.5
+              exmin   0.0
+              exmax   1.0
+            }
+
+            CenterZ {
+              type    Float
+              default 0.5
+              exmin   0.0
+              exmax   1.0
+            }
+
+            SizeX {
+              type    Float
+              default 1.0
+              exmin   0.0
+              max     1.0
+            }
+
+            SizeZ {
+              type    Float
+              default 1.0
+              exmin   0.0
+              max     1.0
+            }
+
+            Shape {
+              type    Enum
+              default R
+              enum    Values {
+                R,           # Rectangular
+                E            # Elliptical
+              }
+            }
+
+            Distribution {
+              type    Enum
+              default U
+              enum    Values {
+                U,           # Uniform
+                L,           # Linear
+                G            # Gaussian
+              }
+            }
+
+            NeighborhoodSize {
+              type    Float
+              default 10.0
+              min     0.0
+              max     WorldSize # no great choice here, but should never be larger than this
+            }
+
+            RemoveFood {
+              type    Bool
+              default False
+            }
+
+            On {
+              type    Bool
+              default True
+              cppsym  "$[ancestor].on"
+            }
+
+          } # FoodPatch properties
+        } # FoodPatches[] element
+      }  # FoodPatches[]
+
+
+      #------------------------------
+      # BrickPatches
+      #------------------------------
+      BrickPatches {
+        type    Array
+
+        default [ ]
+
+        element {
+          type    Object
+          cppsym  "$[ancestor].fBrickPatches[ $[index] ]"
+
+          properties {
+
+            CenterX {
+              type    Float
+              default 0.5
+              exmin   0.0
+              exmax   1.0
+            }
+
+            CenterZ {
+              type    Float
+              default 0.5
+              #exmin   0.0
+              #exmax   1.0
+            }
+
+            SizeX {
+              type    Float
+              default 1.0
+              exmin   0.0
+              max     1.0
+            }
+
+            SizeZ {
+              type    Float
+              default 1.0
+              exmin   0.0
+              max     1.0
+            }
+
+            BrickCount {
+              type    Int
+              exmin   0
+            }
+
+            Shape {
+              type    Enum
+              default R
+              enum    Values {
+                R,           # Rectangular
+                E            # Elliptical
+              }
+            }
+
+            Distribution {
+              type    Enum
+              default U
+              enum    Values {
+                U,           # Uniform
+                L,           # Linear
+                G            # Gaussian
+              }
+            }
+
+            NeighborhoodSize {
+              type    Float
+              default 0.0
+              min     0.0
+              max     WorldSize # no great choice here, but should never be larger than this
+            }
+
+            # Optional color override for this patch.
+            BrickColor {
+              type     Color
+              optional True
+            }
+
+            On {
+              type    Bool
+              default True
+              cppsym  "$[ancestor].on"
+            }
+
+          } # BrickPatch properties
+        } # BrickPatches[] element
+      }  # BrickPatches[]
+
+    } # Domain properties
+  } # Domains[] element
+} # Domains[]
+
+
+#-------------------------------------------------------------------
+# SECTION Simulation parameters -- Secondary
+#-------------------------------------------------------------------
+
+WorldSize {
+  type    Float
+  default 100.0
+  exmin   0.0
+}
+
+Edges {
+  type    Enum
+  default B
+  enum    Values {
+    B,         # Blocked
+    W,         # Wraparound
+    T,         # Tabletop
+    S          # Sticky (and Blocked)
+  }
+}
+
+#
+# Can the agents slide along barriers?
+#
+StickyBarriers {
+  type    Bool
+  default False
+}
+
+AgentsAreFood {
+  type    Enum
+  default True
+  enum    Values {
+    Fight        # If died by fight.
+  }
+  scalar {
+    type    Bool
+  }
+}
+
+MaxMateVelocity {
+  type    Float
+  default 1.0
+  min     0
+  max     1.0
+  cppsym  "$[sim]->fMaxMateVelocity"
+}
+
+MinEatVelocity {
+  type    Float
+  default 0.0
+  min     0
+  max     1.0
+  cppsym  "$[sim]->fMinEatVelocity"
+}
+
+MaxEatVelocity {
+  type    Float
+  default 1.0
+  min     0
+  max     1.0
+  cppsym  "$[sim]->fMaxEatVelocity"
+}
+
+MaxEatYaw {
+  type    Float
+  default 1.0
+  min     0
+  max     1.0
+  cppsym  "$[sim]->fMaxEatYaw"
+}
+
+EatWait {
+  type    Int
+  default 0
+  min     0
+  exmax   MaxLifeSpan
+  cppsym  "$[sim]->fEatWait"
+}
+
+MateWait {
+  type    Int
+  default 25
+  min     0
+  exmax   MaxLifeSpan
+  cppsym  "$[sim]->fMateWait"
+}
+
+InitMateWait {
+  type    Int
+  default 0
+  min     0
+  exmax   MaxLifeSpan
+}
+
+EatMateWait {
+  type    Int
+  default 0
+  min     0
+  exmax   MaxLifeSpan
+}
+
+# Minimum distance agent must be from last eat position before can mate.
+EatMateMinDistance {
+  type    Float
+  default 0.0
+  min     0.0
+  max     WorldSize
+  cppsym  "$[sim]->fEatMateMinDistance"
+}
+
+EnableMateWaitFeedback {
+  type    Bool
+  default False
+}
+
+EnableSpeedFeedback {
+  type    Bool
+  default False
+}
+
+EnableGive {
+  type    Bool
+  default False
+}
+
+EnableCarry {
+  type    Bool
+  default False
+}
+
+MaxCarries {
+  type    Int
+  default 1
+}
+
+CarryAgents {
+  type    Bool
+  default True
+}
+
+CarryFood {
+  type    Bool
+  default True
+}
+
+CarryBricks {
+  type    Bool
+  default True
+}
+
+ShieldAgents {
+  type    Bool
+  default False
+}
+
+ShieldFood {
+  type    Bool
+  default False
+}
+
+ShieldBricks {
+  type    Bool
+  default False
+}
+
+CarryPreventsEat {              # probability that agent carrying something prevents it from eating
+  type    Float
+  default 0.0
+  min     0.0
+  max     1.0
+}
+
+CarryPreventsFight {    # probability that agent carrying something prevents it from fighting
+  type    Float
+  default 0.0
+  min     0.0
+  max     1.0
+}
+
+CarryPreventsGive {             # probability that agent carrying something prevents it from giving
+  type    Float
+  default 0.0
+  min     0.0
+  max     1.0
+}
+
+CarryPreventsMate {             # probability that agent carrying something prevents it from mating
+  type    Float
+  default 0.0
+  min     0.0
+  max     1.0
+}
+
+EnableVisionPitch {
+  type    Bool
+  default False
+}
+
+MinVisionPitch {
+  type    Float
+  default -7.5
+  min     -90.0
+  max     0.0
+}
+
+MaxVisionPitch {
+  type    Float
+  default 7.5
+  min     0
+  max     90.0
+}
+
+EnableVisionYaw {
+  type    Bool
+  default False
+}
+
+MinVisionYaw {
+  type    Float
+  default -90.0
+  min     -180.0
+  max     0.0
+}
+
+MaxVisionYaw {
+  type    Float
+  default 90
+  min     0
+  max     180.0
+}
+
+EyeHeight {
+  type    Float
+  default 0.5
+  min     0.0
+  max     1.0
+}
+
+BodyRedChannel {
+  type    Enum
+  default Fight
+  enum    Values {
+    Fight,
+    Give
+  }
+  scalar {
+    type    Float
+    min     0.0
+    max     1.0
+  }
+}
+
+BodyGreenChannel {
+  type    Enum
+  default I
+  enum    Values {
+    I,             # ID gene
+    L              # Light neuron
+  }
+  scalar {
+    type    Float
+    min     0.0
+    max     1.0
+  }
+}
+
+BodyBlueChannel {
+  type    Enum
+  default Mate
+  enum    Values {
+    Mate,
+    Energy
+  }
+  scalar {
+    type    Float
+    min     0.0
+    max     1.0
+  }
+}
+
+NoseColor {
+  type    Enum
+  default L
+  enum    Values {
+    L            # Light neuron
+  }
+  scalar {
+    type    Float
+    min     0.0
+    max     1.0
+  }
+}
+
+AgentHealingRate {
+  type    Float
+  default 0.0
+  min     0.0
+  max     MaxAgentMaxEnergy
+}
+
+SolidAgents {
+  type    Bool
+  default False
+}
+
+SolidFood {
+  type    Bool
+  default False
+}
+
+SolidBricks {
+  type    Bool
+  default True
+}
+
+PreBirthCycles {
+  type    Int
+  default 25
+  min     0
+}
+
+NumDepletionSteps {
+  type    Int
+  defaults { default 0; legacy 0 }
+  min     0
+}
+
+ApplyLowPopulationAdvantage {
+  type    Bool
+  defaults { default False; legacy False }
+}
+
+EnergyBasedPopulationControl {
+  type    Bool
+  defaults { default True; legacy False }
+  assert  not EnergyBasedPopulationControl or ( not ApplyLowPopulationAdvantage and ( NumDepletionSteps == 0 ) and ( PopControlGlobal or PopControlDomains ) )
+}
+
+# Following PopControl* parameters are ignored if EnergyBasedPopulationControl is False
+PopControlMinFixedRange {
+  type    Float
+  default 0.25
+}
+
+PopControlMaxFixedRange {
+  type    Float
+  default 0.75
+}
+
+PopControlMinScaleFactor {
+  type    Float
+  default 0.0
+}
+
+PopControlMaxScaleFactor {
+  type    Float
+  default 5.0
+}
+
+PopControlGlobal {
+  type    Bool
+  default True
+}
+
+PopControlDomains {
+  type    Bool
+  default False
+}
+
+AllowMinDeaths {
+  type    Bool
+  default False
+}
+
+#-------------------------------------------------------------------
+# SECTION Simulation parameters -- Tertiary
+#-------------------------------------------------------------------
+
+MaxVelocity {
+  type    Float
+  default 1.0
+  exmin   0.0
+}
+
+MotionRate {
+  type    Float
+  default 1.0
+  exmin   0.0
+}
+
+YawRate {
+  type    Float
+  default 20.0
+  exmin   0.0
+}
+
+YawEncoding {
+  type    Enum
+  enum    Values {
+    Oppose,
+    Squash
+  }
+  defaults { default Oppose; legacy Squash }
+}
+
+MinAgentMaxEnergy {
+  type    Float
+  default 500.0
+  exmin   0.0
+}
+
+MaxAgentMaxEnergy {
+  type    Float
+  default 1000.0
+  min     MinAgentMaxEnergy
+}
+
+MinFoodEnergyAtDeath {
+  type    Float
+  default 0.0
+  min     0.0
+}
+
+MiscegenationDelay {
+  type    Int
+  default -1       # -1: off
+  min     -1
+}
+
+MiscegenationFunctionBias {
+  type    Float
+  default 1.0
+}
+
+MiscegenationFunctionInverseSlope {
+  type    Float
+  default 2.0
+}
+
+FoodEnergySizeScale {
+  type    Float
+  default 400.0
+  exmin   0.0
+}
+
+FoodConsumptionRate {
+  type    Float
+  default 100.0
+  exmin   0.0
+}
+
+MinMateEnergyFraction {
+  type    Float
+  default 0.0
+  min     0.0
+  max     1.0
+  cppsym  "$[sim]->fMinMateFraction"
+}
+
+MinHorizontalFieldOfView {
+  type    Float
+  default 20.0
+  exmin   0.0
+}
+
+MaxHorizontalFieldOfView {
+  type    Float
+  default 140.0
+  min     MinHorizontalFieldOfView
+}
+
+VerticalFieldOfView {
+  type    Float
+  default 10.0
+  exmin   0.0
+}
+
+MaxSizeFightAdvantage {
+  type    Float
+  default 2.5
+}
+
+MinSizeEnergyPenalty {
+  type    Float
+  default 0.0
+  min     0.0
+}
+
+MaxSizeEnergyPenalty {
+  type    Float
+  default 10.0
+  min     MinSizeEnergyPenalty
+}
+
+DamageRate {
+  type    Float
+  default 2.5
+}
+
+ProbabilisticFoodPatches {
+  type    Bool
+  default True
+}
+
+RandomBirthLocation {
+  type    Bool
+  default False
+}
+
+RandomBirthLocationRadius {
+  type    Float
+  default 1.0
+  min     0.0
+  max     1.0
+}
+
+SmiteMode {
+  type    Enum
+  default O
+  enum    Values {
+    O,         # Off
+    R,         # Random
+    L          # Least Fit
+  }
+}
+
+SmiteFrac {
+  type    Float
+  default 0.1
+}
+
+SmiteAgeFrac {
+  type    Float
+  default 0.25
+}
+
+FogFunction {
+  type    Enum
+  default O
+  enum    Values {
+    O,        # Off
+    L,        # Linear
+    E         # Exponential
+  }
+}
+
+ExpFogDensity {
+  type    Float
+  default 0.1           # only applies to exponential fog
+}
+
+LinearFogEnd {
+  type    Int
+  default 33            # only applies to linear fog
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Simulation parameters -- Gene Expression (in legacy gene order)
+#-------------------------------------------------------------------
+
+MinAgentSize {
+  type    Float
+  default 0.5
+  exmin   0.0
+}
+
+MaxAgentSize {
+  type    Float
+  default 2.0
+  exmin   MinAgentSize
+}
+
+MinAgentStrength {
+  type    Float
+  default 0.5
+  exmin   0.0
+}
+
+MaxAgentStrength {
+  type    Float
+  default 2.0
+  exmin   MinAgentStrength
+}
+
+MinAgentMaxSpeed {
+  type    Float
+  default 0.5
+  exmin   0.0
+}
+
+MaxAgentMaxSpeed {
+  type    Float
+  default 1.5
+  exmin   MinAgentMaxSpeed
+}
+
+MinMutationRate {
+  type    Float
+  default 0.01
+  min     0.0
+}
+
+MaxMutationRate {
+  type    Float
+  default 0.05
+  min     0.0
+}
+
+MinCrossoverPoints {
+  type    Int
+  default 2
+  min     0
+}
+
+MaxCrossoverPoints {
+  type    Int
+  defaults { default 100; legacy 8 }
+  min     MinCrossoverPoints
+}
+
+MinLifeSpan {
+  type    Int
+  default 500
+  min     1
+}
+
+MaxLifeSpan {
+  type    Int
+  default 1000
+  min     MinLifeSpan
+}
+
+MinEnergyFractionToOffspring {
+  type    Float
+  default 0.2
+  exmin   0.0
+  cppsym  "$[gene, MateEnergyFraction, min]"
+}
+
+MaxEnergyFractionToOffspring {
+  type    Float
+  default 0.8
+  min     MinEnergyFractionToOffspring
+  cppsym  "$[gene, MateEnergyFraction, max]"
+}
+
+MinVisionNeuronsPerGroup {
+  type    Int
+  default 1
+  min     1
+}
+
+MaxVisionNeuronsPerGroup {
+  type    Int
+  default 16
+  min     MinVisionNeuronsPerGroup
+}
+
+MinInternalNeuralGroups {
+  type    Int
+  default 0
+  min     0
+}
+
+MaxInternalNeuralGroups {
+  type    Int
+  defaults { default 20; legacy 5 }
+  min     MinInternalNeuralGroups
+}
+
+MinExcitatoryNeuronsPerGroup {
+  type    Int
+  default 0
+  min     0
+}
+
+MaxExcitatoryNeuronsPerGroup {
+  type    Int
+  default 16
+  min     MinExcitatoryNeuronsPerGroup
+}
+
+MinInhibitoryNeuronsPerGroup {
+  type    Int
+  default 0
+  min     0
+}
+
+MaxInhibitoryNeuronsPerGroup {
+  type    Int
+  default 16
+  min     MinInhibitoryNeuronsPerGroup
+}
+
+MinConnectionDensity {
+  type    Float
+  default 0.0
+  min     0.0
+}
+
+MaxConnectionDensity {
+  type    Float
+  default 1.0
+  min     MinConnectionDensity
+}
+
+MinTopologicalDistortion {
+  type    Float
+  default 0.0
+  min     0.0
+}
+
+MaxTopologicalDistortion {
+  type    Float
+  default 1.0
+  min     MinTopologicalDistortion
+}
+
+MinLearningRate {
+  type    Float
+  default 0.0
+  min     0.0
+}
+
+MaxLearningRate {
+  type    Float
+  default 0.1
+  min     MinLearningRate
+}
+
+OutputSynapseLearning {
+  type    Bool
+  default True
+}
+
+SynapseFromOutputNeurons {
+  type    Bool
+  default True
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Simulation parameters -- Gene Options
+#-------------------------------------------------------------------
+
+GeneInterpolationPower {
+  type    Array
+  default []
+  element {
+    type    Object
+    properties {
+
+      Name {
+        type    String
+      }
+
+      Power {
+        type    Float
+      }
+
+    }
+  }
+}
+
+MinInitialBitProb {
+  type    Float
+  default 0.1           # default to 0.5?
+}
+
+MaxInitialBitProb {
+  type    Float
+  default 0.6           # default to 0.5?
+}
+
+
+
+EnableTopologicalDistortionRngSeed {
+  type    Bool
+  default False
+}
+
+MinTopologicalDistortionRngSeed {
+  type    Int
+  default 0
+}
+
+MaxTopologicalDistortionRngSeed {
+  type    Int
+  default 255
+}
+
+
+
+EnableInitWeightRngSeed {
+  type    Bool
+  default False
+}
+
+MinInitWeightRngSeed {
+  type    Int
+  default 0
+}
+
+MaxInitWeightRngSeed {
+  type    Int
+  default 255
+}
+
+
+SeedMutationRate {
+  type    Float
+  default 0.5
+  min     0.0
+  max     1.0
+}
+
+
+SeedFightBias {
+  type    Float
+  default 0.5
+  min     0
+  max     1.0
+}
+
+SeedFightExcitation {
+  type    Float
+  default 1.0
+  min     0.0
+  max     1.0
+}
+
+SeedGiveBias {
+  type    Float
+  default 0.0
+  min     0.0
+  max     1.0
+}
+
+SeedPickupBias {
+  type    Float
+  default 0.0
+  min     0.0
+  max     1.0
+}
+
+SeedDropBias {
+  type    Float
+  default 0.0
+  min     0.0
+  max     1.0
+}
+
+SeedPickupExcitation {
+  type    Float
+  default 0.0
+  min     0.0
+  max     1.0
+}
+
+SeedDropExcitation {
+  type    Float
+  default 0.0
+  min     0.0
+  max     1.0
+}
+
+#-------------------------------------------------------------------
+# SECTION Simulation parameters -- Neural Function
+#-------------------------------------------------------------------
+
+BrainArchitecture {
+  type    Enum
+  enum    Values {
+    Groups,
+    Sheets
+  }
+  default Groups
+}
+
+LogisticSlope {
+  type    Float
+  defaults { default 1.0; legacy 0.5 }
+}
+
+MaxSynapseWeight {
+  type    Float
+  default 8.0
+  exmin   0.0
+}
+
+MaxSynapseWeightInitial {
+  type    Float
+  default 2.0
+  exmin   0.0
+}
+
+SynapseWeightDecayRate {
+  type    Float
+  default 0.99
+  max     1.0
+  exmin   0.0
+}
+
+MaxBiasWeight {
+  type    Float
+  default MaxSynapseWeight
+}
+
+NeuronModel {
+  type    Enum
+  default F
+  enum    Values {
+    F,           # Firing Rate
+    T,           # Tau
+    S            # Spiking
+  }
+}
+
+EnableSpikingGenes {
+  type Bool
+  default ( True if NeuronModel == NeuronModel.S else False )
+}
+
+SpikingAMin {
+  type    Float
+  default 0.001
+}
+
+SpikingAMax {
+  type    Float
+  default 0.2
+  min     SpikingAMin
+}
+
+SpikingBMin {
+  type    Float
+  default 0.01
+}
+
+SpikingBMax {
+  type    Float
+  default 0.3
+  min     SpikingBMin
+}
+
+SpikingCMin {
+  type    Float
+  default -80
+}
+
+SpikingCMax {
+  type    Float
+  default -30
+  min     SpikingCMax
+}
+
+SpikingDMin {
+  type    Float
+  default 0.1
+}
+
+SpikingDMax {
+  type    Float
+  default 10
+  min     SpikingDMin
+}
+
+
+TauMin {
+  type    Float
+  default 0.01
+}
+
+TauMax {
+  type    Float
+  default 1.0
+  min     TauMin
+}
+
+TauSeed {
+  type    Float
+  default 1.0
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Sheets parameters
+#-------------------------------------------------------------------
+
+Sheets {
+  type    Object
+  default {}
+  properties {
+
+    MinBrainSize {
+      type    Object
+      default {}
+      properties {
+
+        X {
+          type    Float
+          default 1.0
+          exmin   0.0
+          max     MaxBrainSize.X
+	  cppsym  "$[gene, SizeX, min]"
+        }
+
+        Y {
+          type    Float
+          default 0.1
+          exmin   0.0
+          max     MaxBrainSize.Y
+	  cppsym  "$[gene, SizeY, min]"
+        }
+
+        Z {
+          type    Float
+          default 0.1
+          exmin   0.0
+          max     MaxBrainSize.Z
+	  cppsym  "$[gene, SizeZ, min]"
+        }
+
+      }
+    }
+
+    MaxBrainSize {
+      type    Object
+      default {}
+      properties {
+
+        X {
+          type    Float
+          default 1.0
+          min     MinBrainSize.X
+	  cppsym  "$[gene, SizeX, max]"
+        }
+
+        Y {
+          type    Float
+          default 1.0
+          min     MinBrainSize.Y
+	  cppsym  "$[gene, SizeY, max]"
+        }
+
+        Z {
+          type    Float
+          default 1.0
+          min     MinBrainSize.Z
+	  cppsym  "$[gene, SizeZ, max]"
+        }
+
+      }
+    }
+
+    # Value of 0.0 disables distance penalty
+    MinSynapseProbabilityX {
+      type    Float
+      default 1.0
+      min     0.0
+      max     MaxSynapseProbabilityX
+    }
+
+    MaxSynapseProbabilityX {
+      type    Float
+      default MinSynapseProbabilityX
+      min     MinSynapseProbabilityX
+    }
+
+    MinLearningRate {
+      type    Float
+      default 0.0
+      min     0.0
+      max     MaxLearningRate
+    }
+
+    MaxLearningRate {
+      type    Float
+      default 0.1
+      min     MinLearningRate
+    }
+
+    MinVisionNeuronsPerSheet {
+      type    Int
+      default 1
+      min     1
+      max     MaxVisionNeuronsPerSheet
+    }
+
+    MaxVisionNeuronsPerSheet {
+      type    Int
+      default 16
+      min     MinVisionNeuronsPerSheet
+    }
+
+    MinInternalSheetsCount {
+      type    Int
+      default 0
+      min     0
+      max     MaxInternalSheetsCount
+    }
+
+    MaxInternalSheetsCount {
+      type    Int
+      default 5
+      min     MinInternalSheetsCount
+    }
+
+    MinInternalSheetSize {
+      type    Float
+      default 0.1
+      exmin   0.0
+      max     MaxInternalSheetSize
+    }
+
+    MaxInternalSheetSize {
+      type    Float
+      default 1.0
+      min     MinInternalSheetSize
+      max     1.0
+    }
+
+    MinInternalSheetNeuronCount {
+      type    Int
+      default 1
+      min     0
+      max     MaxInternalSheetNeuronCount
+    }
+
+    MaxInternalSheetNeuronCount {
+      type    Int
+      default 10
+      min     MinInternalSheetNeuronCount
+    }
+
+    CrossoverProbability {
+      type    Object
+      default {}
+      properties {
+        Sheet {
+	  type    Float
+	  default 0.0
+	  min     0.0
+          max     1.0
+	}
+
+        ReceptiveField {
+	  type    Float
+	  default 0.0
+	  min     0.0
+          max     1.0
+	}
+
+        NeuronAttr {
+	  type    Float
+	  default 0.0
+	  min     0.0
+          max     1.0
+	}
+
+        Gene {
+	  type    Float
+	  default 1.0
+	  min     0.0
+          max     1.0
+	}
+      }
+    }
+
+    NeuronAttrEncoding {
+      type    Enum
+      enum    Values {
+        Sheet,
+        Neuron
+      }
+      default Sheet
+    }
+
+    SynapseAttrEncoding {
+      type    Enum
+      enum    Values {
+        Field
+      }
+      default Field
+    }
+
+    ReceptiveFieldEncoding {
+      type    Enum
+      enum    Values {
+        Permutations,
+	ExplicitVector
+      }
+      default Permutations
+    }
+
+    EnableReceptiveFieldCurrentRegion {
+      type    Bool
+      default False
+    }
+
+    EnableReceptiveFieldOtherRegion {
+      type    Bool
+      default False
+    }
+
+    MinExplicitVectorSize {
+      type    Int
+      default 1
+      min     0
+      max     MaxExplicitVectorSize
+    }
+
+    MaxExplicitVectorSize {
+      type    Int
+      default 10
+      min     MinExplicitVectorSize
+    }
+
+  }
+}
+
+#-------------------------------------------------------------------
+# SECTION Simulation parameters -- Behavior Control
+#-------------------------------------------------------------------
+
+EatThreshold {
+  type    Float
+  default 0.2
+}
+
+MateThreshold {
+  type    Float
+  default 0.5
+}
+
+FightThreshold {
+  type    Float
+  default 0.2
+}
+
+GiveThreshold {
+  type    Float
+  default 0.2
+}
+
+PickupThreshold {
+  type    Float
+  default 0.5
+}
+
+DropThreshold {
+  type    Float
+  default 0.5
+}
+
+FightMode {
+  type    Enum
+  default Normal
+  enum    Values {
+    Normal,
+    Null
+  }
+}
+
+FightMultiplier {
+  type    Float
+  default 1.0
+}
+
+GiveFraction {
+  type    Float
+  default 0.2
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Simulation parameters -- Energy Use
+#-------------------------------------------------------------------
+
+EnergyUseMultiplier {
+  type    Float
+  default 1.0
+}
+
+EnergyUseEat {
+  type    Float
+  default 0.01
+}
+
+EnergyUseMate {
+  type    Float
+  default 0.1
+  min     0.0
+  cppsym  "agent::gEat2Energy"
+}
+
+EnergyUseFight {
+  type    Float
+  default 1.0
+}
+
+EnergyUseGive {
+  type    Float
+  default 1.0
+}
+
+EnergyUseMove {
+  type    Float
+  default 0.1
+}
+
+EnergyUseTurn {
+  type    Float
+  default 0.1
+}
+
+EnergyUseLight {
+  type    Float
+  default 0.01
+}
+
+EnergyUseFocus {
+  type    Float
+  default 0.001
+}
+
+EnergyUsePickup {
+  type    Float
+  default 0.5
+}
+
+EnergyUseDrop {
+  type    Float
+  default 0.001
+}
+
+EnergyUseCarryAgent {
+  type    Float
+  default 0.05
+}
+
+EnergyUseCarryAgentSize {
+  type    Float
+  default 0.05
+}
+
+EnergyUseCarryFood {
+  type    Float
+  default 0.01
+}
+
+EnergyUseCarryBrick {
+  type    Float
+  default 0.01
+}
+
+EnergyUseNeurons {
+  type    Float
+  default 0.1   # was 1.84; where did that come from?
+}
+
+EnergyUseSynapses {
+  type    Float
+  default 0.01  # was 0.34; where did that come from?
+}
+
+EnergyUseFixed {
+  type    Float
+  default 0.05
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Simulator control
+#-------------------------------------------------------------------
+
+EpochFrequency {
+  type    Int
+  default RecordFrequency
+}
+
+ComplexityType {
+  type    String
+  default "P"
+}
+
+EndOnPopulationCrash {
+  type    Bool
+  default False
+}
+
+StaticTimestepGeometry {
+  type    Bool
+  defaults { default True; legacy False }
+}
+
+ParallelInitAgents {
+  type    Bool
+  defaults { default True; legacy False }
+}
+
+ParallelInteract {
+  type    Bool
+  defaults { default True; legacy False }
+}
+
+ParallelCreateAgents {
+  type    Bool
+  defaults { default True; legacy False }
+}
+
+# This only takes effect if StaticTimestepGeometry is True.
+# Its primary purpose is for easing debugging with False value.
+ParallelBrains {
+  type    Bool
+  default True
+}
+
+CheckPointFrequency {
+  type    Int
+  default 1000  # sadly, still not used
+}
+
+RetinaWidth {
+  type    Int
+  default 22
+}
+
+RetinaHeight {
+  type    Int
+  default RetinaWidth
+  assert ( RetinaWidth == RetinaHeight ) # change this when we support more than one row
+}
+
+AgentHeight {
+  type    Float
+  default 0.2
+}
+
+FoodHeight {
+  type    Float
+  default 0.6
+}
+
+FoodColor {
+  type    Color
+  default {
+    R    0.2
+    G    0.6
+    B    0.2
+  }
+}
+
+BrickHeight {
+  type    Float
+  default 0.5
+}
+
+BrickColor {
+  type    Color
+  default {
+    R    0.6
+    G    0.2
+    B    0.2
+  }
+}
+
+BarrierHeight {
+  type    Float
+  default 5.0
+}
+
+BarrierColor {
+  type    Color
+  default {
+    R    0.35
+    G    0.25
+    B    0.15
+  }
+}
+
+GroundColor {
+  type    Color
+  default {
+    R    0.1
+    G    0.15
+    B    0.05
+  }
+}
+
+GroundClearance {
+  type    Float
+  default 0.0
+}
+
+GrayCoding {
+  type    Bool
+  default False
+}
+
+# RecordAll is a convenience parameter that is only used while processing the worldfile
+# It serves as a default state for all of the *Record* parameters
+RecordAll {
+  type    Bool
+  default False
+}
+
+# RecordNeuralComplexityFiles is a convenience parameter that is only used while processing the worldfile
+# It serves as a default state for the *Record* parameters controlling files that may be needed for computing complexity
+RecordNeuralComplexityFiles {
+  type    Bool
+  default False
+}
+
+# RecordFrequency is a convenience parameter that is only used while processing the worldfile
+# It serves as a default frequency for the *RecordFrequency parameters
+RecordFrequency {
+  type    Int
+  default 1000
+}
+
+RecordBirthsDeaths {
+  type    Bool
+  default ( RecordAll or RecordNeuralComplexityFiles )
+}
+
+RecordPosition {
+  type    Enum
+  enum    Values {
+    False,
+    Precise,     # X,Y,Z to full precision
+    Approximate  # X,Z rounded to 2 decimal places
+  }
+  default Approximate if RecordAll else False
+}
+
+RecordBarrierPosition {
+  type    Bool
+  default RecordAll
+}
+
+RecordContacts {
+  type    Bool
+  default RecordAll
+}
+
+RecordCollisions {
+  type    Bool
+  default RecordAll
+}
+
+RecordCarry {
+  type    Bool
+  default RecordAll
+}
+
+RecordEnergy {
+  type    Bool
+  default ( RecordAll or RecordNeuralComplexityFiles )
+}
+
+RecordBrain {
+  type    Bool
+  default ( RecordAll or RecordNeuralComplexityFiles )
+}
+
+RecordBrainRecent {
+  type    Bool
+  default RecordBrain
+}
+
+RecordBrainBestRecent {
+  type    Bool
+  default RecordBrain
+}
+
+RecordBrainBestSoFar {
+  type    Bool
+  default RecordBrain
+}
+
+RecordGeneStats {
+  type    Bool
+  default RecordAll
+}
+
+RecordComplexity {
+  type    Bool
+  default False # an exception to RecordAll because it is so computationally expensive
+  assert ( not RecordComplexity or RecordAll or RecordNeuralComplexityFiles )
+}
+
+RecordAdamiComplexity {
+  type    Bool
+  default False # an exception to RecordAll because of computational expense and we don't usually want it
+}
+
+AdamiComplexityRecordFrequency {
+  type    Int
+  default 200
+}
+
+RecordGenomes {
+  type    Bool
+  default RecordAll
+}
+
+GenomeSubsetLog {
+  type    Object
+  default {
+  }
+
+  properties {
+    Record {
+      type    Bool
+      default False
+    }
+
+    GeneNames {
+      type    Array
+      default [ ]
+
+      element {
+        type    String
+      }
+    }
+  }
+}
+
+RecordSeparations {
+  type    Enum
+  default All if RecordAll else False
+  enum    Values {
+    False,
+    Contact,
+    All
+  }
+}
+
+CompressFiles {
+  type    Bool
+  default True
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Simulator resume control
+#-------------------------------------------------------------------
+
+SeedGenomeFromRun {
+  type    Bool
+  default False
+}
+
+SeedPositionFromRun {
+  type    Bool
+  default False
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Genetic algorithm parameters
+#-------------------------------------------------------------------
+
+EliteFrequency {
+  type    Int
+  default 100
+}
+
+PairFrequency {
+  type    Int
+  default 2
+}
+
+NumberFittest {
+  type    Int
+  default 30
+}
+
+NumberRecentFittest {
+  type    Int
+  default 10
+}
+
+ComplexityFitnessWeight {
+  type    Float
+  default 0.0
+}
+
+HeuristicFitnessWeight {
+  type    Float
+  default 0.0
+}
+
+TournamentSize {
+  type    Int
+  default 3
+  min     0             # zero reverts to iteration through fittest list method
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Heuristic fitness function parameters
+#-------------------------------------------------------------------
+
+FitnessWeightEating {
+  type    Float
+  default 10.0
+}
+
+FitnessWeightMating {
+  type    Float
+  default 100.0
+}
+
+FitnessWeightMoving {
+  type    Float
+  default 0.1
+}
+
+FitnessWeightEnergyAtDeath {
+  type    Float
+  default 5.0
+}
+
+FitnessWeightLongevity {
+  type    Float
+  default 25.0
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Runtime Simulation Properties
+#-------------------------------------------------------------------
+
+Step {
+  type    Int
+  runtime True
+  cppsym  "$[sim]->fStep"
+}
+
+AgentCount {
+  type    Int
+  runtime True
+  cppsym  "objectxsortedlist::gXSortedObjects.agentCount"
+}
+
+FoodCount {
+  type    Int
+  runtime True
+  cppsym  "objectxsortedlist::gXSortedObjects.foodCount"
+}
+
+
+#-------------------------------------------------------------------
+# SECTION Eliminate
+#-------------------------------------------------------------------
+
+Vision {
+  type    Bool
+  default True  # make always true
+}

@@ -2,7 +2,7 @@ TEMPLATE = app
 
 CONFIG += qt warn_on debug
 
-QT += opengl network
+QT += opengl network widgets
 
 # qmake selects gcc for cp files
 # Some of the code depends on C++11 standard so set it here

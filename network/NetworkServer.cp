@@ -17,7 +17,7 @@ NetworkServer::NetworkServer(QObject *parent)
                       << tr("Polyworld message 7");
 }
 
-void NetworkServer::incomingConnection(int socketDescriptor)
+void NetworkServer::incomingConnection(qintptr socketDescriptor)
 {
     QString polyworldMessage = polyworldMessages.at(qrand() % polyworldMessages.size());
     NetworkThread *thread = new NetworkThread(socketDescriptor, polyworldMessage, this);

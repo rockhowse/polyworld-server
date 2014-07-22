@@ -9,6 +9,7 @@
 // Qt
 #include <qgl.h>
 #include <QApplication>
+#include <QtCore>
 
 // Local
 #include "MainWindow.h"
@@ -129,38 +130,36 @@ int main( int argc, char** argv )
 	// even in locales that normally use a comma for the decimal mark.
 	setlocale( LC_NUMERIC, "C" );
 
-	TSimulation *simulation = new TSimulation( worldfilePath, monitorPath );
-	SimulationController *simulationController = new SimulationController( simulation );
+    TSimulation *simulation = new TSimulation( worldfilePath, monitorPath );
+    SimulationController *simulationController = new SimulationController( simulation );
 
-	int exitval;
+    int exitval;
 
 	if( ui == "gui" )
 	{
-		MainWindow *mainWindow = new MainWindow( simulationController );
+        MainWindow *mainWindow = new MainWindow( simulationController );
+        simulationController->start();
 
         // network code
         NetworkDialog networkDialog;
-    #ifdef Q_OS_SYMBIAN
-        networkDialog.showMaximized();
-    #else
         networkDialog.show();
-    #endif
-		simulationController->start();
-		exitval = app.exec();
-		delete mainWindow;
+        qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+
+        exitval = app.exec();
+        delete mainWindow;
 	}
 	else if( ui == "term" )
 	{
-		TerminalUI *term = new TerminalUI( simulationController );
+        TerminalUI *term = new TerminalUI( simulationController );
 		simulationController->start();
 		exitval = app.exec();
-		delete term;
+        delete term;
 	}
 	else
 		assert( false );
 
-	delete simulationController;
-	delete simulation;
+    delete simulationController;
+    delete simulation;
 
 	return exitval;
 }

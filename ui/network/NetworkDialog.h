@@ -4,8 +4,10 @@
 #include <QWidget>
 #include "NetworkServer.h"
 
+QT_BEGIN_NAMESPACE
 class QLabel;
 class QPushButton;
+QT_END_NAMESPACE
 
 class NetworkDialog : public QWidget
 {

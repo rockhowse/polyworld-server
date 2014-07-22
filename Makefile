@@ -9953,6 +9953,112 @@ main.o: main/main.cp ../Qt/5.3/gcc_64/include/QtOpenGL/qgl.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
 		../Qt/5.3/gcc_64/include/QtGui/qguiapplication.h \
 		../Qt/5.3/gcc_64/include/QtGui/qinputmethod.h \
+		../Qt/5.3/gcc_64/include/QtCore/QtCore \
+		../Qt/5.3/gcc_64/include/QtCore/QtCoreDepends \
+		../Qt/5.3/gcc_64/include/QtCore/qabstractanimation.h \
+		../Qt/5.3/gcc_64/include/QtCore/qanimationgroup.h \
+		../Qt/5.3/gcc_64/include/QtCore/qparallelanimationgroup.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpauseanimation.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpropertyanimation.h \
+		../Qt/5.3/gcc_64/include/QtCore/qvariantanimation.h \
+		../Qt/5.3/gcc_64/include/QtCore/qeasingcurve.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsequentialanimationgroup.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtextcodec.h \
+		../Qt/5.3/gcc_64/include/QtCore/qendian.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlibraryinfo.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdatetime.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbuffer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdir.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfileinfo.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdiriterator.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfileselector.h \
+		../Qt/5.3/gcc_64/include/QtCore/QObject \
+		../Qt/5.3/gcc_64/include/QtCore/QStringList \
+		../Qt/5.3/gcc_64/include/QtCore/qfilesystemwatcher.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlockfile.h \
+		../Qt/5.3/gcc_64/include/QtCore/qloggingcategory.h \
+		../Qt/5.3/gcc_64/include/QtCore/qprocess.h \
+		../Qt/5.3/gcc_64/include/QtCore/qresource.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsavefile.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsettings.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstandardpaths.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtemporarydir.h \
+		../Qt/5.3/gcc_64/include/QtCore/QScopedPointer \
+		../Qt/5.3/gcc_64/include/QtCore/qtemporaryfile.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstractitemmodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstractproxymodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qidentityproxymodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qitemselectionmodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsortfilterproxymodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstringlistmodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qjsonarray.h \
+		../Qt/5.3/gcc_64/include/QtCore/qjsonvalue.h \
+		../Qt/5.3/gcc_64/include/QtCore/qjsondocument.h \
+		../Qt/5.3/gcc_64/include/QtCore/qjsonobject.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstracteventdispatcher.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbasictimer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmath.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmetaobject.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmimedata.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobjectcleanuphandler.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpointer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsharedmemory.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsignalmapper.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsocketnotifier.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsystemsemaphore.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtimer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtranslator.h \
+		../Qt/5.3/gcc_64/include/QtCore/qwineventnotifier.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmimedatabase.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmimetype.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfactoryinterface.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlibrary.h \
+		../Qt/5.3/gcc_64/include/QtCore/qplugin.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpluginloader.h \
+		../Qt/5.3/gcc_64/include/QtCore/quuid.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstractstate.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstracttransition.h \
+		../Qt/5.3/gcc_64/include/QtCore/qeventtransition.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfinalstate.h \
+		../Qt/5.3/gcc_64/include/QtCore/qhistorystate.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsignaltransition.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstate.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstatemachine.h \
+		../Qt/5.3/gcc_64/include/QtCore/qexception.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfuture.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfutureinterface.h \
+		../Qt/5.3/gcc_64/include/QtCore/qrunnable.h \
+		../Qt/5.3/gcc_64/include/QtCore/qresultstore.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfuturesynchronizer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfuturewatcher.h \
+		../Qt/5.3/gcc_64/include/QtCore/qreadwritelock.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsemaphore.h \
+		../Qt/5.3/gcc_64/include/QtCore/qthread.h \
+		../Qt/5.3/gcc_64/include/QtCore/qthreadpool.h \
+		../Qt/5.3/gcc_64/include/QtCore/qthreadstorage.h \
+		../Qt/5.3/gcc_64/include/QtCore/qwaitcondition.h \
+		../Qt/5.3/gcc_64/include/QtCore/qarraydataops.h \
+		../Qt/5.3/gcc_64/include/QtCore/qarraydatapointer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbitarray.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbytearraymatcher.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcache.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcollator.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcommandlineoption.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcommandlineparser.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcryptographichash.h \
+		../Qt/5.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlinkedlist.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmessageauthenticationcode.h \
+		../Qt/5.3/gcc_64/include/QtCore/qqueue.h \
+		../Qt/5.3/gcc_64/include/QtCore/qregularexpression.h \
+		../Qt/5.3/gcc_64/include/QtCore/qscopedvaluerollback.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstack.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtextboundaryfinder.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtimeline.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtimezone.h \
+		../Qt/5.3/gcc_64/include/QtCore/qxmlstream.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtcoreversion.h \
 		ui/gui/MainWindow.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/QAction \
 		../Qt/5.3/gcc_64/include/QtWidgets/qaction.h \
@@ -9965,7 +10071,6 @@ main.o: main/main.cp ../Qt/5.3/gcc_64/include/QtOpenGL/qgl.h \
 		ui/gui/MonitorView.h \
 		../Qt/5.3/gcc_64/include/QtOpenGL/QGLWidget \
 		monitor/Monitor.h \
-		../Qt/5.3/gcc_64/include/QtCore/QObject \
 		utils/datalib.h \
 		utils/misc.h \
 		utils/Variant.h \
@@ -10034,10 +10139,11 @@ main.o: main/main.cp ../Qt/5.3/gcc_64/include/QtOpenGL/qgl.h \
 		environment/food.h \
 		environment/brick.h \
 		environment/BrickPatch.h \
-                ui/SimulationController.h \
+		ui/SimulationController.h \
+		ui/term/TerminalUI.h \
+		ui/network/NetworkDialog.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/QWidget \
 		network/NetworkServer.h \
-		../Qt/5.3/gcc_64/include/QtCore/QStringList \
 		../Qt/5.3/gcc_64/include/QtNetwork/QTcpServer \
 		../Qt/5.3/gcc_64/include/QtNetwork/qtcpserver.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/qabstractsocket.h \
@@ -12274,6 +12380,7 @@ MainWindow.o: ui/gui/MainWindow.cp ui/gui/MainWindow.h \
 		ui/gui/StatusTextMonitorView.h \
 		../Qt/5.3/gcc_64/include/QtGui/QFont \
 		ui/gui/ToggleWidgetOpenAction.h \
+		ui/network/NetworkDialog.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/QWidget \
 		network/NetworkServer.h \
 		../Qt/5.3/gcc_64/include/QtCore/QStringList \
@@ -13645,6 +13752,7 @@ NetworkDialog.o: ui/network/NetworkDialog.cpp ../Qt/5.3/gcc_64/include/QtGui/QtG
 		../Qt/5.3/gcc_64/include/QtNetwork/qsslcipher.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/qsslkey.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/qtnetworkversion.h \
+		ui/network/NetworkDialog.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/QWidget \
 		../Qt/5.3/gcc_64/include/QtWidgets/qwidget.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/qsizepolicy.h \

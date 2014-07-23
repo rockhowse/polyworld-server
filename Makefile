@@ -161,7 +161,8 @@ SOURCES       = app/Simulation.cp \
 		utils/AbstractFile.cp \
 		ui/network/NetworkDialog.cpp \
 		network/NetworkServer.cp \
-		network/NetworkThread.cpp moc_Simulation.cpp \
+		network/NetworkThread.cpp \
+		network/SendWorldFileThread.cpp moc_Simulation.cpp \
 		moc_AgentPovRenderer.cpp \
 		moc_DebuggerWindow.cpp \
 		moc_BehaviorPanel.cpp \
@@ -298,6 +299,7 @@ OBJECTS       = Simulation.o \
 		NetworkDialog.o \
 		NetworkServer.o \
 		NetworkThread.o \
+		SendWorldFileThread.o \
 		moc_Simulation.o \
 		moc_AgentPovRenderer.o \
 		moc_DebuggerWindow.o \
@@ -541,7 +543,8 @@ DIST          = ../Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		utils/AbstractFile.cp \
 		ui/network/NetworkDialog.cpp \
 		network/NetworkServer.cp \
-		network/NetworkThread.cpp
+		network/NetworkThread.cpp \
+		network/SendWorldFileThread.cpp
 QMAKE_TARGET  = polyworld-server
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = polyworld-server
@@ -808,7 +811,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/polyworld-server1.0.0 || mkdir -p .tmp/polyworld-server1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/polyworld-server1.0.0/ && $(COPY_FILE) --parents app/Simulation.h app/simtypes.h app/simconst.h app/globals.h app/debug.h app/Scheduler.h app/GeneStats.h app/FittestList.h app/EatStatistics.h app/Domain.h agent/agent.h agent/SpeedSensor.h agent/Retina.h agent/RandomSensor.h agent/Metabolism.h agent/MateWaitSensor.h agent/LifeSpan.h agent/EnergySensor.h agent/CarryingSensor.h agent/BeingCarriedSensor.h agent/AgentPovRenderer.h agent/AgentListener.h agent/AgentAttachedData.h brain/SpikingModel.h brain/Sensor.h brain/NeuronModel.h brain/NeuralNetRenderer.h brain/NervousSystem.h brain/Nerve.h brain/FiringRateModel.h brain/Brain.h brain/BaseNeuronModel.h brain/groups/GroupsNeuralNetRenderer.h brain/groups/GroupsBrain.h brain/sheets/SheetsModel.h brain/sheets/SheetsBrain.h complexity/complexity_motion.h complexity/complexity_brain.h complexity/complexity_algorithm.h complexity/complexity.h complexity/adami.h debugger/DebuggerWindow.h debugger/BehaviorPanel.h environment/food.h environment/brick.h environment/barrier.h environment/Patch.h environment/FoodType.h environment/FoodPatch.h environment/Energy.h environment/BrickPatch.h genome/SeparationCache.h genome/NeuronType.h genome/NeurGroupType.h genome/GenomeUtil.h genome/GenomeSchema.h genome/GenomeLayout.h genome/Genome.h genome/GeneSchema.h genome/Gene.h genome/groups/GroupsSynapseType.h genome/groups/GroupsGenomeSchema.h genome/groups/GroupsGenome.h genome/groups/GroupsGene.h genome/sheets/SheetsGenomeSchema.h genome/sheets/SheetsGenome.h genome/sheets/SheetsCrossover.h graphics/gstage.h graphics/gsquare.h graphics/gscene.h graphics/grect.h graphics/graphics.h graphics/gpolygon.h graphics/gpoint.h graphics/gobject.h graphics/gmisc.h graphics/gline.h graphics/glight.h graphics/gcamera.h logs/Logs.h logs/Logger.h monitor/SceneRenderer.h monitor/MovieController.h monitor/MonitorManager.h monitor/Monitor.h monitor/CameraController.h monitor/AgentTracker.h proplib/writer.h proplib/state.h proplib/schema.h proplib/proplib.h proplib/parser.h proplib/overlay.h proplib/interpreter.h proplib/expression.h proplib/editor.h proplib/dom.h proplib/cppprops.h proplib/convert.h proplib/builder.h ui/SimulationController.h ui/gui/ToggleWidgetOpenAction.h ui/gui/StatusTextMonitorView.h ui/gui/SceneMonitorView.h ui/gui/PovMonitorView.h ui/gui/MonitorView.h ui/gui/MainWindow.h ui/gui/ChartMonitorView.h ui/gui/BrainMonitorView.h ui/gui/BinChartViewMonitor.h ui/term/termio.h ui/term/TerminalUI.h ui/term/Prompt.h utils/objectxsortedlist.h utils/objectlist.h utils/next_combination.h utils/misc.h utils/indexlist.h utils/graybin.h utils/gdlink.h utils/error.h utils/distributions.h utils/datalib.h utils/Variant.h utils/Scalar.h utils/Resources.h utils/RandomNumberGenerator.h utils/Queue.h utils/PwMovieUtils.h utils/Mutex.h utils/Events.h utils/AbstractFile.h ui/network/NetworkDialog.h network/NetworkServer.h network/NetworkThread.h .tmp/polyworld-server1.0.0/ && $(COPY_FILE) --parents app/Simulation.cp app/simtypes.cp app/globals.cp app/debug.cp app/Scheduler.cp app/GeneStats.cp app/FittestList.cp app/EatStatistics.cp agent/agent.cp agent/SpeedSensor.cp agent/Retina.cp agent/RandomSensor.cp agent/Metabolism.cp agent/MateWaitSensor.cp agent/LifeSpan.cp agent/EnergySensor.cp agent/CarryingSensor.cp agent/BeingCarriedSensor.cp agent/AgentPovRenderer.cp agent/AgentAttachedData.cp brain/SpikingModel.cp brain/NervousSystem.cp brain/Nerve.cp brain/FiringRateModel.cp brain/Brain.cp brain/groups/GroupsBrain.cp brain/sheets/SheetsModel.cp brain/sheets/SheetsBrain.cp complexity/complexity_motion.cp complexity/complexity_brain.cp complexity/complexity_algorithm.cp complexity/adami.cp debugger/DebuggerWindow.cp debugger/BehaviorPanel.cp environment/food.cp environment/brick.cp environment/barrier.cp environment/Patch.cp environment/FoodType.cp environment/FoodPatch.cp environment/Energy.cp environment/BrickPatch.cp genome/SeparationCache.cp genome/GenomeUtil.cp genome/GenomeSchema.cp genome/GenomeLayout.cp genome/Genome.cp genome/GeneSchema.cp genome/Gene.cp genome/groups/GroupsSynapseType.cp genome/groups/GroupsGenomeSchema.cp genome/groups/GroupsGenome.cp genome/groups/GroupsGene.cp genome/sheets/SheetsGenomeSchema.cp genome/sheets/SheetsGenome.cp genome/sheets/SheetsCrossover.cp graphics/gstage.cp graphics/gsquare.cp graphics/gscene.cp graphics/grect.cp graphics/graphics.cp graphics/gpolygon.cp graphics/gpoint.cp graphics/gobject.cp graphics/gmisc.cp graphics/gline.cp graphics/glight.cp graphics/gcamera.cp logs/Logs.cp logs/Logger.cp main/main.cp monitor/SceneRenderer.cp monitor/MovieController.cp monitor/MonitorManager.cp monitor/Monitor.cp monitor/CameraController.cp monitor/AgentTracker.cp proplib/writer.cp proplib/state.cp proplib/schema.cp proplib/parser.cp proplib/overlay.cp proplib/interpreter.cp proplib/expression.cp proplib/editor.cp proplib/dom.cp proplib/cppprops.cp proplib/convert.cp proplib/builder.cp ui/SimulationController.cp ui/gui/ToggleWidgetOpenAction.cp ui/gui/StatusTextMonitorView.cp ui/gui/SceneMonitorView.cp ui/gui/PovMonitorView.cp ui/gui/MonitorView.cp ui/gui/MainWindow.cp ui/gui/ChartMonitorView.cp ui/gui/BrainMonitorView.cp ui/term/termio.cp ui/term/TerminalUI.cp ui/term/Prompt.cp utils/objectxsortedlist.cp utils/misc.cp utils/indexlist.cp utils/error.cp utils/distributions.cp utils/datalib.cp utils/Variant.cp utils/Scalar.cp utils/Resources.cp utils/RandomNumberGenerator.cp utils/PwMovieUtils.cp utils/Mutex.cp utils/AbstractFile.cp ui/network/NetworkDialog.cpp network/NetworkServer.cp network/NetworkThread.cpp .tmp/polyworld-server1.0.0/ && (cd `dirname .tmp/polyworld-server1.0.0` && $(TAR) polyworld-server1.0.0.tar polyworld-server1.0.0 && $(COMPRESS) polyworld-server1.0.0.tar) && $(MOVE) `dirname .tmp/polyworld-server1.0.0`/polyworld-server1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/polyworld-server1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/polyworld-server1.0.0/ && $(COPY_FILE) --parents app/Simulation.h app/simtypes.h app/simconst.h app/globals.h app/debug.h app/Scheduler.h app/GeneStats.h app/FittestList.h app/EatStatistics.h app/Domain.h agent/agent.h agent/SpeedSensor.h agent/Retina.h agent/RandomSensor.h agent/Metabolism.h agent/MateWaitSensor.h agent/LifeSpan.h agent/EnergySensor.h agent/CarryingSensor.h agent/BeingCarriedSensor.h agent/AgentPovRenderer.h agent/AgentListener.h agent/AgentAttachedData.h brain/SpikingModel.h brain/Sensor.h brain/NeuronModel.h brain/NeuralNetRenderer.h brain/NervousSystem.h brain/Nerve.h brain/FiringRateModel.h brain/Brain.h brain/BaseNeuronModel.h brain/groups/GroupsNeuralNetRenderer.h brain/groups/GroupsBrain.h brain/sheets/SheetsModel.h brain/sheets/SheetsBrain.h complexity/complexity_motion.h complexity/complexity_brain.h complexity/complexity_algorithm.h complexity/complexity.h complexity/adami.h debugger/DebuggerWindow.h debugger/BehaviorPanel.h environment/food.h environment/brick.h environment/barrier.h environment/Patch.h environment/FoodType.h environment/FoodPatch.h environment/Energy.h environment/BrickPatch.h genome/SeparationCache.h genome/NeuronType.h genome/NeurGroupType.h genome/GenomeUtil.h genome/GenomeSchema.h genome/GenomeLayout.h genome/Genome.h genome/GeneSchema.h genome/Gene.h genome/groups/GroupsSynapseType.h genome/groups/GroupsGenomeSchema.h genome/groups/GroupsGenome.h genome/groups/GroupsGene.h genome/sheets/SheetsGenomeSchema.h genome/sheets/SheetsGenome.h genome/sheets/SheetsCrossover.h graphics/gstage.h graphics/gsquare.h graphics/gscene.h graphics/grect.h graphics/graphics.h graphics/gpolygon.h graphics/gpoint.h graphics/gobject.h graphics/gmisc.h graphics/gline.h graphics/glight.h graphics/gcamera.h logs/Logs.h logs/Logger.h monitor/SceneRenderer.h monitor/MovieController.h monitor/MonitorManager.h monitor/Monitor.h monitor/CameraController.h monitor/AgentTracker.h proplib/writer.h proplib/state.h proplib/schema.h proplib/proplib.h proplib/parser.h proplib/overlay.h proplib/interpreter.h proplib/expression.h proplib/editor.h proplib/dom.h proplib/cppprops.h proplib/convert.h proplib/builder.h ui/SimulationController.h ui/gui/ToggleWidgetOpenAction.h ui/gui/StatusTextMonitorView.h ui/gui/SceneMonitorView.h ui/gui/PovMonitorView.h ui/gui/MonitorView.h ui/gui/MainWindow.h ui/gui/ChartMonitorView.h ui/gui/BrainMonitorView.h ui/gui/BinChartViewMonitor.h ui/term/termio.h ui/term/TerminalUI.h ui/term/Prompt.h utils/objectxsortedlist.h utils/objectlist.h utils/next_combination.h utils/misc.h utils/indexlist.h utils/graybin.h utils/gdlink.h utils/error.h utils/distributions.h utils/datalib.h utils/Variant.h utils/Scalar.h utils/Resources.h utils/RandomNumberGenerator.h utils/Queue.h utils/PwMovieUtils.h utils/Mutex.h utils/Events.h utils/AbstractFile.h ui/network/NetworkDialog.h network/NetworkServer.h network/NetworkThread.h network/SendWorldFileThread.h .tmp/polyworld-server1.0.0/ && $(COPY_FILE) --parents app/Simulation.cp app/simtypes.cp app/globals.cp app/debug.cp app/Scheduler.cp app/GeneStats.cp app/FittestList.cp app/EatStatistics.cp agent/agent.cp agent/SpeedSensor.cp agent/Retina.cp agent/RandomSensor.cp agent/Metabolism.cp agent/MateWaitSensor.cp agent/LifeSpan.cp agent/EnergySensor.cp agent/CarryingSensor.cp agent/BeingCarriedSensor.cp agent/AgentPovRenderer.cp agent/AgentAttachedData.cp brain/SpikingModel.cp brain/NervousSystem.cp brain/Nerve.cp brain/FiringRateModel.cp brain/Brain.cp brain/groups/GroupsBrain.cp brain/sheets/SheetsModel.cp brain/sheets/SheetsBrain.cp complexity/complexity_motion.cp complexity/complexity_brain.cp complexity/complexity_algorithm.cp complexity/adami.cp debugger/DebuggerWindow.cp debugger/BehaviorPanel.cp environment/food.cp environment/brick.cp environment/barrier.cp environment/Patch.cp environment/FoodType.cp environment/FoodPatch.cp environment/Energy.cp environment/BrickPatch.cp genome/SeparationCache.cp genome/GenomeUtil.cp genome/GenomeSchema.cp genome/GenomeLayout.cp genome/Genome.cp genome/GeneSchema.cp genome/Gene.cp genome/groups/GroupsSynapseType.cp genome/groups/GroupsGenomeSchema.cp genome/groups/GroupsGenome.cp genome/groups/GroupsGene.cp genome/sheets/SheetsGenomeSchema.cp genome/sheets/SheetsGenome.cp genome/sheets/SheetsCrossover.cp graphics/gstage.cp graphics/gsquare.cp graphics/gscene.cp graphics/grect.cp graphics/graphics.cp graphics/gpolygon.cp graphics/gpoint.cp graphics/gobject.cp graphics/gmisc.cp graphics/gline.cp graphics/glight.cp graphics/gcamera.cp logs/Logs.cp logs/Logger.cp main/main.cp monitor/SceneRenderer.cp monitor/MovieController.cp monitor/MonitorManager.cp monitor/Monitor.cp monitor/CameraController.cp monitor/AgentTracker.cp proplib/writer.cp proplib/state.cp proplib/schema.cp proplib/parser.cp proplib/overlay.cp proplib/interpreter.cp proplib/expression.cp proplib/editor.cp proplib/dom.cp proplib/cppprops.cp proplib/convert.cp proplib/builder.cp ui/SimulationController.cp ui/gui/ToggleWidgetOpenAction.cp ui/gui/StatusTextMonitorView.cp ui/gui/SceneMonitorView.cp ui/gui/PovMonitorView.cp ui/gui/MonitorView.cp ui/gui/MainWindow.cp ui/gui/ChartMonitorView.cp ui/gui/BrainMonitorView.cp ui/term/termio.cp ui/term/TerminalUI.cp ui/term/Prompt.cp utils/objectxsortedlist.cp utils/misc.cp utils/indexlist.cp utils/error.cp utils/distributions.cp utils/datalib.cp utils/Variant.cp utils/Scalar.cp utils/Resources.cp utils/RandomNumberGenerator.cp utils/PwMovieUtils.cp utils/Mutex.cp utils/AbstractFile.cp ui/network/NetworkDialog.cpp network/NetworkServer.cp network/NetworkThread.cpp network/SendWorldFileThread.cpp .tmp/polyworld-server1.0.0/ && (cd `dirname .tmp/polyworld-server1.0.0` && $(TAR) polyworld-server1.0.0.tar polyworld-server1.0.0 && $(COMPRESS) polyworld-server1.0.0.tar) && $(MOVE) `dirname .tmp/polyworld-server1.0.0`/polyworld-server1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/polyworld-server1.0.0
 
 
 clean:compiler_clean 
@@ -13963,9 +13966,12 @@ NetworkServer.o: network/NetworkServer.cp network/NetworkServer.h \
 		../Qt/5.3/gcc_64/include/QtCore/qset.h \
 		../Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/qhostaddress.h \
-		network/NetworkThread.h \
+		network/SendWorldFileThread.h \
 		../Qt/5.3/gcc_64/include/QtCore/QThread \
 		../Qt/5.3/gcc_64/include/QtCore/qthread.h \
+		../Qt/5.3/gcc_64/include/QtCore/QFile \
+		../Qt/5.3/gcc_64/include/QtCore/qfile.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfiledevice.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/QTcpSocket \
 		../Qt/5.3/gcc_64/include/QtNetwork/qtcpsocket.h
 	$(CC) -c $(CFLAGS) $(INCPATH) -o NetworkServer.o network/NetworkServer.cp
@@ -14203,6 +14209,82 @@ NetworkThread.o: network/NetworkThread.cpp network/NetworkThread.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/qsslkey.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/qtnetworkversion.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o NetworkThread.o network/NetworkThread.cpp
+
+SendWorldFileThread.o: network/SendWorldFileThread.cpp network/SendWorldFileThread.h \
+		../Qt/5.3/gcc_64/include/QtCore/QThread \
+		../Qt/5.3/gcc_64/include/QtCore/qthread.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobject.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		../Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		../Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		../Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlist.h \
+		../Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
+		../Qt/5.3/gcc_64/include/QtCore/qiterator.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcoreevent.h \
+		../Qt/5.3/gcc_64/include/QtCore/qscopedpointer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmetatype.h \
+		../Qt/5.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		../Qt/5.3/gcc_64/include/QtCore/qisenum.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
+		../Qt/5.3/gcc_64/include/QtCore/QFile \
+		../Qt/5.3/gcc_64/include/QtCore/qfile.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfiledevice.h \
+		../Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/QTcpSocket \
+		../Qt/5.3/gcc_64/include/QtNetwork/qtcpsocket.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qabstractsocket.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdebug.h \
+		../Qt/5.3/gcc_64/include/QtCore/qhash.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpair.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmap.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtextstream.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlocale.h \
+		../Qt/5.3/gcc_64/include/QtCore/qvariant.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
+		../Qt/5.3/gcc_64/include/QtCore/qregexp.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h \
+		../Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
+		../Qt/5.3/gcc_64/include/QtCore/qvector.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpoint.h \
+		../Qt/5.3/gcc_64/include/QtCore/qset.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SendWorldFileThread.o network/SendWorldFileThread.cpp
 
 moc_Simulation.o: moc_Simulation.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Simulation.o moc_Simulation.cpp

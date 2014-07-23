@@ -169,7 +169,8 @@ HEADERS += app/Simulation.h \
     utils/AbstractFile.h \
     ui/network/NetworkDialog.h \
     network/NetworkServer.h \
-    network/NetworkThread.h
+    network/NetworkThread.h \
+    network/SendWorldFileThread.h
            
 SOURCES += app/Simulation.cp \
     app/simtypes.cp \
@@ -287,7 +288,8 @@ SOURCES += app/Simulation.cp \
     utils/AbstractFile.cp \
     ui/network/NetworkDialog.cpp \
     network/NetworkServer.cp \
-    network/NetworkThread.cpp
+    network/NetworkThread.cpp \
+    network/SendWorldFileThread.cpp
 
 OTHER_FILES += \
     Makefile \

@@ -1,6 +1,6 @@
 
 #include "NetworkServer.h"
-#include "NetworkThread.h"
+#include "SendWorldFileThread.h"
 
 #include <stdlib.h>
 
@@ -17,10 +17,22 @@ NetworkServer::NetworkServer(QObject *parent)
                       << tr("Polyworld message 7");
 }
 
+/*
 void NetworkServer::incomingConnection(qintptr socketDescriptor)
 {
     QString polyworldMessage = polyworldMessages.at(qrand() % polyworldMessages.size());
     NetworkThread *thread = new NetworkThread(socketDescriptor, polyworldMessage, this);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
+}
+*/
+
+void NetworkServer::incomingConnection(qintptr socketDescriptor)
+{
+    qDebug() << "File transfer started";
+
+    SendWorldFileThread *thread = new SendWorldFileThread(socketDescriptor,this);
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    thread->start();
+    qDebug() << "Thread called";
 }

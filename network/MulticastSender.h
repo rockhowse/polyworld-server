@@ -78,6 +78,7 @@ private:
     QHostAddress groupAddress;
     int messageNo;
     int simStep;
+    bool sendMulticast;
 };
 
 #endif

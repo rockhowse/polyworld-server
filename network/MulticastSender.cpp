@@ -82,6 +82,7 @@ MulticastSender::MulticastSender(QWidget *parent)
 
     setWindowTitle(tr("Multicast Sender"));
     ttlSpinBox->setValue(1);
+    sendMulticast = false;
 }
 
 void MulticastSender::ttlChanged(int newTtl)
@@ -93,21 +94,24 @@ void MulticastSender::setStep(int curStep)
 {
     simStep = curStep;
 
-    // send the dataGram
-    sendDatagram();
+    if(sendMulticast) {
+        // send the dataGram
+        sendDatagram();
+    }
 }
 
 void MulticastSender::startSending()
 {
+    sendMulticast = true;
     startButton->setEnabled(false);
-    timer->start(1000);
+    //timer->start(1000);
 }
 
 void MulticastSender::sendDatagram()
 {
     //statusLabel->setText(tr("Now sending datagram %1").arg(messageNo));
     //QByteArray datagram = "Multicast message " + QByteArray::number(messageNo);
-    QByteArray datagram = "Multicast message " + QByteArray::number(simStep);
+    QByteArray datagram = "Simulation Step [" + QByteArray::number(simStep) + "]";
     udpSocket->writeDatagram(datagram.data(), datagram.size(),
                              groupAddress, 45454);
     //++messageNo;

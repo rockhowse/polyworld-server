@@ -139,6 +139,7 @@ public:
 
 signals:
 	void ended();
+    void stepChanged(int simStep);
 	
 private:
 	void InitCppProperties( proplib::Document *docWorldFile );

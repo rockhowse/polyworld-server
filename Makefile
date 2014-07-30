@@ -162,7 +162,8 @@ SOURCES       = app/Simulation.cp \
 		ui/network/NetworkDialog.cpp \
 		network/NetworkServer.cp \
 		network/NetworkThread.cpp \
-		network/SendWorldFileThread.cpp moc_Simulation.cpp \
+		network/SendWorldFileThread.cpp \
+		network/MulticastSender.cpp moc_Simulation.cpp \
 		moc_AgentPovRenderer.cpp \
 		moc_DebuggerWindow.cpp \
 		moc_BehaviorPanel.cpp \
@@ -181,7 +182,8 @@ SOURCES       = app/Simulation.cp \
 		moc_TerminalUI.cpp \
 		moc_NetworkDialog.cpp \
 		moc_NetworkServer.cpp \
-		moc_NetworkThread.cpp
+		moc_NetworkThread.cpp \
+		moc_MulticastSender.cpp
 OBJECTS       = Simulation.o \
 		simtypes.o \
 		globals.o \
@@ -300,6 +302,7 @@ OBJECTS       = Simulation.o \
 		NetworkServer.o \
 		NetworkThread.o \
 		SendWorldFileThread.o \
+		MulticastSender.o \
 		moc_Simulation.o \
 		moc_AgentPovRenderer.o \
 		moc_DebuggerWindow.o \
@@ -319,7 +322,8 @@ OBJECTS       = Simulation.o \
 		moc_TerminalUI.o \
 		moc_NetworkDialog.o \
 		moc_NetworkServer.o \
-		moc_NetworkThread.o
+		moc_NetworkThread.o \
+		moc_MulticastSender.o
 DIST          = ../Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../Qt/5.3/gcc_64/mkspecs/common/shell-unix.conf \
 		../Qt/5.3/gcc_64/mkspecs/common/unix.conf \
@@ -544,7 +548,8 @@ DIST          = ../Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		ui/network/NetworkDialog.cpp \
 		network/NetworkServer.cp \
 		network/NetworkThread.cpp \
-		network/SendWorldFileThread.cpp
+		network/SendWorldFileThread.cpp \
+		network/MulticastSender.cpp
 QMAKE_TARGET  = polyworld-server
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = polyworld-server
@@ -811,7 +816,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/polyworld-server1.0.0 || mkdir -p .tmp/polyworld-server1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/polyworld-server1.0.0/ && $(COPY_FILE) --parents app/Simulation.h app/simtypes.h app/simconst.h app/globals.h app/debug.h app/Scheduler.h app/GeneStats.h app/FittestList.h app/EatStatistics.h app/Domain.h agent/agent.h agent/SpeedSensor.h agent/Retina.h agent/RandomSensor.h agent/Metabolism.h agent/MateWaitSensor.h agent/LifeSpan.h agent/EnergySensor.h agent/CarryingSensor.h agent/BeingCarriedSensor.h agent/AgentPovRenderer.h agent/AgentListener.h agent/AgentAttachedData.h brain/SpikingModel.h brain/Sensor.h brain/NeuronModel.h brain/NeuralNetRenderer.h brain/NervousSystem.h brain/Nerve.h brain/FiringRateModel.h brain/Brain.h brain/BaseNeuronModel.h brain/groups/GroupsNeuralNetRenderer.h brain/groups/GroupsBrain.h brain/sheets/SheetsModel.h brain/sheets/SheetsBrain.h complexity/complexity_motion.h complexity/complexity_brain.h complexity/complexity_algorithm.h complexity/complexity.h complexity/adami.h debugger/DebuggerWindow.h debugger/BehaviorPanel.h environment/food.h environment/brick.h environment/barrier.h environment/Patch.h environment/FoodType.h environment/FoodPatch.h environment/Energy.h environment/BrickPatch.h genome/SeparationCache.h genome/NeuronType.h genome/NeurGroupType.h genome/GenomeUtil.h genome/GenomeSchema.h genome/GenomeLayout.h genome/Genome.h genome/GeneSchema.h genome/Gene.h genome/groups/GroupsSynapseType.h genome/groups/GroupsGenomeSchema.h genome/groups/GroupsGenome.h genome/groups/GroupsGene.h genome/sheets/SheetsGenomeSchema.h genome/sheets/SheetsGenome.h genome/sheets/SheetsCrossover.h graphics/gstage.h graphics/gsquare.h graphics/gscene.h graphics/grect.h graphics/graphics.h graphics/gpolygon.h graphics/gpoint.h graphics/gobject.h graphics/gmisc.h graphics/gline.h graphics/glight.h graphics/gcamera.h logs/Logs.h logs/Logger.h monitor/SceneRenderer.h monitor/MovieController.h monitor/MonitorManager.h monitor/Monitor.h monitor/CameraController.h monitor/AgentTracker.h proplib/writer.h proplib/state.h proplib/schema.h proplib/proplib.h proplib/parser.h proplib/overlay.h proplib/interpreter.h proplib/expression.h proplib/editor.h proplib/dom.h proplib/cppprops.h proplib/convert.h proplib/builder.h ui/SimulationController.h ui/gui/ToggleWidgetOpenAction.h ui/gui/StatusTextMonitorView.h ui/gui/SceneMonitorView.h ui/gui/PovMonitorView.h ui/gui/MonitorView.h ui/gui/MainWindow.h ui/gui/ChartMonitorView.h ui/gui/BrainMonitorView.h ui/gui/BinChartViewMonitor.h ui/term/termio.h ui/term/TerminalUI.h ui/term/Prompt.h utils/objectxsortedlist.h utils/objectlist.h utils/next_combination.h utils/misc.h utils/indexlist.h utils/graybin.h utils/gdlink.h utils/error.h utils/distributions.h utils/datalib.h utils/Variant.h utils/Scalar.h utils/Resources.h utils/RandomNumberGenerator.h utils/Queue.h utils/PwMovieUtils.h utils/Mutex.h utils/Events.h utils/AbstractFile.h ui/network/NetworkDialog.h network/NetworkServer.h network/NetworkThread.h network/SendWorldFileThread.h .tmp/polyworld-server1.0.0/ && $(COPY_FILE) --parents app/Simulation.cp app/simtypes.cp app/globals.cp app/debug.cp app/Scheduler.cp app/GeneStats.cp app/FittestList.cp app/EatStatistics.cp agent/agent.cp agent/SpeedSensor.cp agent/Retina.cp agent/RandomSensor.cp agent/Metabolism.cp agent/MateWaitSensor.cp agent/LifeSpan.cp agent/EnergySensor.cp agent/CarryingSensor.cp agent/BeingCarriedSensor.cp agent/AgentPovRenderer.cp agent/AgentAttachedData.cp brain/SpikingModel.cp brain/NervousSystem.cp brain/Nerve.cp brain/FiringRateModel.cp brain/Brain.cp brain/groups/GroupsBrain.cp brain/sheets/SheetsModel.cp brain/sheets/SheetsBrain.cp complexity/complexity_motion.cp complexity/complexity_brain.cp complexity/complexity_algorithm.cp complexity/adami.cp debugger/DebuggerWindow.cp debugger/BehaviorPanel.cp environment/food.cp environment/brick.cp environment/barrier.cp environment/Patch.cp environment/FoodType.cp environment/FoodPatch.cp environment/Energy.cp environment/BrickPatch.cp genome/SeparationCache.cp genome/GenomeUtil.cp genome/GenomeSchema.cp genome/GenomeLayout.cp genome/Genome.cp genome/GeneSchema.cp genome/Gene.cp genome/groups/GroupsSynapseType.cp genome/groups/GroupsGenomeSchema.cp genome/groups/GroupsGenome.cp genome/groups/GroupsGene.cp genome/sheets/SheetsGenomeSchema.cp genome/sheets/SheetsGenome.cp genome/sheets/SheetsCrossover.cp graphics/gstage.cp graphics/gsquare.cp graphics/gscene.cp graphics/grect.cp graphics/graphics.cp graphics/gpolygon.cp graphics/gpoint.cp graphics/gobject.cp graphics/gmisc.cp graphics/gline.cp graphics/glight.cp graphics/gcamera.cp logs/Logs.cp logs/Logger.cp main/main.cp monitor/SceneRenderer.cp monitor/MovieController.cp monitor/MonitorManager.cp monitor/Monitor.cp monitor/CameraController.cp monitor/AgentTracker.cp proplib/writer.cp proplib/state.cp proplib/schema.cp proplib/parser.cp proplib/overlay.cp proplib/interpreter.cp proplib/expression.cp proplib/editor.cp proplib/dom.cp proplib/cppprops.cp proplib/convert.cp proplib/builder.cp ui/SimulationController.cp ui/gui/ToggleWidgetOpenAction.cp ui/gui/StatusTextMonitorView.cp ui/gui/SceneMonitorView.cp ui/gui/PovMonitorView.cp ui/gui/MonitorView.cp ui/gui/MainWindow.cp ui/gui/ChartMonitorView.cp ui/gui/BrainMonitorView.cp ui/term/termio.cp ui/term/TerminalUI.cp ui/term/Prompt.cp utils/objectxsortedlist.cp utils/misc.cp utils/indexlist.cp utils/error.cp utils/distributions.cp utils/datalib.cp utils/Variant.cp utils/Scalar.cp utils/Resources.cp utils/RandomNumberGenerator.cp utils/PwMovieUtils.cp utils/Mutex.cp utils/AbstractFile.cp ui/network/NetworkDialog.cpp network/NetworkServer.cp network/NetworkThread.cpp network/SendWorldFileThread.cpp .tmp/polyworld-server1.0.0/ && (cd `dirname .tmp/polyworld-server1.0.0` && $(TAR) polyworld-server1.0.0.tar polyworld-server1.0.0 && $(COMPRESS) polyworld-server1.0.0.tar) && $(MOVE) `dirname .tmp/polyworld-server1.0.0`/polyworld-server1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/polyworld-server1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/polyworld-server1.0.0/ && $(COPY_FILE) --parents app/Simulation.h app/simtypes.h app/simconst.h app/globals.h app/debug.h app/Scheduler.h app/GeneStats.h app/FittestList.h app/EatStatistics.h app/Domain.h agent/agent.h agent/SpeedSensor.h agent/Retina.h agent/RandomSensor.h agent/Metabolism.h agent/MateWaitSensor.h agent/LifeSpan.h agent/EnergySensor.h agent/CarryingSensor.h agent/BeingCarriedSensor.h agent/AgentPovRenderer.h agent/AgentListener.h agent/AgentAttachedData.h brain/SpikingModel.h brain/Sensor.h brain/NeuronModel.h brain/NeuralNetRenderer.h brain/NervousSystem.h brain/Nerve.h brain/FiringRateModel.h brain/Brain.h brain/BaseNeuronModel.h brain/groups/GroupsNeuralNetRenderer.h brain/groups/GroupsBrain.h brain/sheets/SheetsModel.h brain/sheets/SheetsBrain.h complexity/complexity_motion.h complexity/complexity_brain.h complexity/complexity_algorithm.h complexity/complexity.h complexity/adami.h debugger/DebuggerWindow.h debugger/BehaviorPanel.h environment/food.h environment/brick.h environment/barrier.h environment/Patch.h environment/FoodType.h environment/FoodPatch.h environment/Energy.h environment/BrickPatch.h genome/SeparationCache.h genome/NeuronType.h genome/NeurGroupType.h genome/GenomeUtil.h genome/GenomeSchema.h genome/GenomeLayout.h genome/Genome.h genome/GeneSchema.h genome/Gene.h genome/groups/GroupsSynapseType.h genome/groups/GroupsGenomeSchema.h genome/groups/GroupsGenome.h genome/groups/GroupsGene.h genome/sheets/SheetsGenomeSchema.h genome/sheets/SheetsGenome.h genome/sheets/SheetsCrossover.h graphics/gstage.h graphics/gsquare.h graphics/gscene.h graphics/grect.h graphics/graphics.h graphics/gpolygon.h graphics/gpoint.h graphics/gobject.h graphics/gmisc.h graphics/gline.h graphics/glight.h graphics/gcamera.h logs/Logs.h logs/Logger.h monitor/SceneRenderer.h monitor/MovieController.h monitor/MonitorManager.h monitor/Monitor.h monitor/CameraController.h monitor/AgentTracker.h proplib/writer.h proplib/state.h proplib/schema.h proplib/proplib.h proplib/parser.h proplib/overlay.h proplib/interpreter.h proplib/expression.h proplib/editor.h proplib/dom.h proplib/cppprops.h proplib/convert.h proplib/builder.h ui/SimulationController.h ui/gui/ToggleWidgetOpenAction.h ui/gui/StatusTextMonitorView.h ui/gui/SceneMonitorView.h ui/gui/PovMonitorView.h ui/gui/MonitorView.h ui/gui/MainWindow.h ui/gui/ChartMonitorView.h ui/gui/BrainMonitorView.h ui/gui/BinChartViewMonitor.h ui/term/termio.h ui/term/TerminalUI.h ui/term/Prompt.h utils/objectxsortedlist.h utils/objectlist.h utils/next_combination.h utils/misc.h utils/indexlist.h utils/graybin.h utils/gdlink.h utils/error.h utils/distributions.h utils/datalib.h utils/Variant.h utils/Scalar.h utils/Resources.h utils/RandomNumberGenerator.h utils/Queue.h utils/PwMovieUtils.h utils/Mutex.h utils/Events.h utils/AbstractFile.h ui/network/NetworkDialog.h network/NetworkServer.h network/NetworkThread.h network/SendWorldFileThread.h network/MulticastSender.h .tmp/polyworld-server1.0.0/ && $(COPY_FILE) --parents app/Simulation.cp app/simtypes.cp app/globals.cp app/debug.cp app/Scheduler.cp app/GeneStats.cp app/FittestList.cp app/EatStatistics.cp agent/agent.cp agent/SpeedSensor.cp agent/Retina.cp agent/RandomSensor.cp agent/Metabolism.cp agent/MateWaitSensor.cp agent/LifeSpan.cp agent/EnergySensor.cp agent/CarryingSensor.cp agent/BeingCarriedSensor.cp agent/AgentPovRenderer.cp agent/AgentAttachedData.cp brain/SpikingModel.cp brain/NervousSystem.cp brain/Nerve.cp brain/FiringRateModel.cp brain/Brain.cp brain/groups/GroupsBrain.cp brain/sheets/SheetsModel.cp brain/sheets/SheetsBrain.cp complexity/complexity_motion.cp complexity/complexity_brain.cp complexity/complexity_algorithm.cp complexity/adami.cp debugger/DebuggerWindow.cp debugger/BehaviorPanel.cp environment/food.cp environment/brick.cp environment/barrier.cp environment/Patch.cp environment/FoodType.cp environment/FoodPatch.cp environment/Energy.cp environment/BrickPatch.cp genome/SeparationCache.cp genome/GenomeUtil.cp genome/GenomeSchema.cp genome/GenomeLayout.cp genome/Genome.cp genome/GeneSchema.cp genome/Gene.cp genome/groups/GroupsSynapseType.cp genome/groups/GroupsGenomeSchema.cp genome/groups/GroupsGenome.cp genome/groups/GroupsGene.cp genome/sheets/SheetsGenomeSchema.cp genome/sheets/SheetsGenome.cp genome/sheets/SheetsCrossover.cp graphics/gstage.cp graphics/gsquare.cp graphics/gscene.cp graphics/grect.cp graphics/graphics.cp graphics/gpolygon.cp graphics/gpoint.cp graphics/gobject.cp graphics/gmisc.cp graphics/gline.cp graphics/glight.cp graphics/gcamera.cp logs/Logs.cp logs/Logger.cp main/main.cp monitor/SceneRenderer.cp monitor/MovieController.cp monitor/MonitorManager.cp monitor/Monitor.cp monitor/CameraController.cp monitor/AgentTracker.cp proplib/writer.cp proplib/state.cp proplib/schema.cp proplib/parser.cp proplib/overlay.cp proplib/interpreter.cp proplib/expression.cp proplib/editor.cp proplib/dom.cp proplib/cppprops.cp proplib/convert.cp proplib/builder.cp ui/SimulationController.cp ui/gui/ToggleWidgetOpenAction.cp ui/gui/StatusTextMonitorView.cp ui/gui/SceneMonitorView.cp ui/gui/PovMonitorView.cp ui/gui/MonitorView.cp ui/gui/MainWindow.cp ui/gui/ChartMonitorView.cp ui/gui/BrainMonitorView.cp ui/term/termio.cp ui/term/TerminalUI.cp ui/term/Prompt.cp utils/objectxsortedlist.cp utils/misc.cp utils/indexlist.cp utils/error.cp utils/distributions.cp utils/datalib.cp utils/Variant.cp utils/Scalar.cp utils/Resources.cp utils/RandomNumberGenerator.cp utils/PwMovieUtils.cp utils/Mutex.cp utils/AbstractFile.cp ui/network/NetworkDialog.cpp network/NetworkServer.cp network/NetworkThread.cpp network/SendWorldFileThread.cpp network/MulticastSender.cpp .tmp/polyworld-server1.0.0/ && (cd `dirname .tmp/polyworld-server1.0.0` && $(TAR) polyworld-server1.0.0.tar polyworld-server1.0.0 && $(COMPRESS) polyworld-server1.0.0.tar) && $(MOVE) `dirname .tmp/polyworld-server1.0.0`/polyworld-server1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/polyworld-server1.0.0
 
 
 clean:compiler_clean 
@@ -834,9 +839,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_Simulation.cpp moc_AgentPovRenderer.cpp moc_DebuggerWindow.cpp moc_BehaviorPanel.cpp moc_SceneRenderer.cpp moc_MovieController.cpp moc_Monitor.cpp moc_AgentTracker.cpp moc_SimulationController.cpp moc_ToggleWidgetOpenAction.cpp moc_StatusTextMonitorView.cpp moc_SceneMonitorView.cpp moc_PovMonitorView.cpp moc_MainWindow.cpp moc_ChartMonitorView.cpp moc_BrainMonitorView.cpp moc_TerminalUI.cpp moc_NetworkDialog.cpp moc_NetworkServer.cpp moc_NetworkThread.cpp
+compiler_moc_header_make_all: moc_Simulation.cpp moc_AgentPovRenderer.cpp moc_DebuggerWindow.cpp moc_BehaviorPanel.cpp moc_SceneRenderer.cpp moc_MovieController.cpp moc_Monitor.cpp moc_AgentTracker.cpp moc_SimulationController.cpp moc_ToggleWidgetOpenAction.cpp moc_StatusTextMonitorView.cpp moc_SceneMonitorView.cpp moc_PovMonitorView.cpp moc_MainWindow.cpp moc_ChartMonitorView.cpp moc_BrainMonitorView.cpp moc_TerminalUI.cpp moc_NetworkDialog.cpp moc_NetworkServer.cpp moc_NetworkThread.cpp moc_MulticastSender.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_Simulation.cpp moc_AgentPovRenderer.cpp moc_DebuggerWindow.cpp moc_BehaviorPanel.cpp moc_SceneRenderer.cpp moc_MovieController.cpp moc_Monitor.cpp moc_AgentTracker.cpp moc_SimulationController.cpp moc_ToggleWidgetOpenAction.cpp moc_StatusTextMonitorView.cpp moc_SceneMonitorView.cpp moc_PovMonitorView.cpp moc_MainWindow.cpp moc_ChartMonitorView.cpp moc_BrainMonitorView.cpp moc_TerminalUI.cpp moc_NetworkDialog.cpp moc_NetworkServer.cpp moc_NetworkThread.cpp
+	-$(DEL_FILE) moc_Simulation.cpp moc_AgentPovRenderer.cpp moc_DebuggerWindow.cpp moc_BehaviorPanel.cpp moc_SceneRenderer.cpp moc_MovieController.cpp moc_Monitor.cpp moc_AgentTracker.cpp moc_SimulationController.cpp moc_ToggleWidgetOpenAction.cpp moc_StatusTextMonitorView.cpp moc_SceneMonitorView.cpp moc_PovMonitorView.cpp moc_MainWindow.cpp moc_ChartMonitorView.cpp moc_BrainMonitorView.cpp moc_TerminalUI.cpp moc_NetworkDialog.cpp moc_NetworkServer.cpp moc_NetworkThread.cpp moc_MulticastSender.cpp
 moc_Simulation.cpp: ../Qt/5.3/gcc_64/include/QtCore/QObject \
 		../Qt/5.3/gcc_64/include/QtCore/qobject.h \
 		../Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
@@ -2695,6 +2700,113 @@ moc_NetworkThread.cpp: ../Qt/5.3/gcc_64/include/QtCore/QThread \
 		../Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
 		network/NetworkThread.h
 	/home/mint/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/mint/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/mint/polyworld-server -I/home/mint/polyworld-server -I/home/mint/polyworld-server/agent -I/home/mint/polyworld-server/app -I/home/mint/polyworld-server/brain -I/home/mint/polyworld-server/brain/groups -I/home/mint/polyworld-server/brain/sheets -I/home/mint/polyworld-server/complexity -I/home/mint/polyworld-server/critter -I/home/mint/polyworld-server/environment -I/home/mint/polyworld-server/genome -I/home/mint/polyworld-server/genome/groups -I/home/mint/polyworld-server/genome/sheets -I/home/mint/polyworld-server/graphics -I/home/mint/polyworld-server/logs -I/home/mint/polyworld-server/monitor -I/home/mint/polyworld-server/network -I/home/mint/polyworld-server/proplib -I/home/mint/polyworld-server/ui -I/home/mint/polyworld-server/ui/gui -I/home/mint/polyworld-server/ui/network -I/home/mint/polyworld-server/ui/term -I/home/mint/polyworld-server/utils -I/usr/include/python2.7 -I/home/mint/Qt/5.3/gcc_64/include -I/home/mint/Qt/5.3/gcc_64/include/QtOpenGL -I/home/mint/Qt/5.3/gcc_64/include/QtWidgets -I/home/mint/Qt/5.3/gcc_64/include/QtNetwork -I/home/mint/Qt/5.3/gcc_64/include/QtGui -I/home/mint/Qt/5.3/gcc_64/include/QtCore network/NetworkThread.h -o moc_NetworkThread.cpp
+
+moc_MulticastSender.cpp: ../Qt/5.3/gcc_64/include/QtWidgets/QDialog \
+		../Qt/5.3/gcc_64/include/QtWidgets/qdialog.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qwidget.h \
+		../Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
+		../Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		../Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		../Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		../Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobject.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlist.h \
+		../Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
+		../Qt/5.3/gcc_64/include/QtCore/qiterator.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcoreevent.h \
+		../Qt/5.3/gcc_64/include/QtCore/qscopedpointer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmetatype.h \
+		../Qt/5.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		../Qt/5.3/gcc_64/include/QtCore/qisenum.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmargins.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpaintdevice.h \
+		../Qt/5.3/gcc_64/include/QtCore/qrect.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsize.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpoint.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpalette.h \
+		../Qt/5.3/gcc_64/include/QtGui/qcolor.h \
+		../Qt/5.3/gcc_64/include/QtGui/qrgb.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
+		../Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpair.h \
+		../Qt/5.3/gcc_64/include/QtCore/qregexp.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h \
+		../Qt/5.3/gcc_64/include/QtGui/qbrush.h \
+		../Qt/5.3/gcc_64/include/QtCore/qvector.h \
+		../Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
+		../Qt/5.3/gcc_64/include/QtGui/qregion.h \
+		../Qt/5.3/gcc_64/include/QtCore/qline.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtransform.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
+		../Qt/5.3/gcc_64/include/QtGui/qimage.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpixmap.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../Qt/5.3/gcc_64/include/QtCore/qhash.h \
+		../Qt/5.3/gcc_64/include/QtGui/qfont.h \
+		../Qt/5.3/gcc_64/include/QtGui/qfontmetrics.h \
+		../Qt/5.3/gcc_64/include/QtGui/qfontinfo.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../Qt/5.3/gcc_64/include/QtGui/qcursor.h \
+		../Qt/5.3/gcc_64/include/QtGui/qkeysequence.h \
+		../Qt/5.3/gcc_64/include/QtGui/qevent.h \
+		../Qt/5.3/gcc_64/include/QtCore/qvariant.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmap.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdebug.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtextstream.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlocale.h \
+		../Qt/5.3/gcc_64/include/QtCore/qset.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		../Qt/5.3/gcc_64/include/QtCore/qurl.h \
+		../Qt/5.3/gcc_64/include/QtCore/qurlquery.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfile.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfiledevice.h \
+		../Qt/5.3/gcc_64/include/QtGui/qvector2d.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtouchdevice.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/QHostAddress \
+		../Qt/5.3/gcc_64/include/QtNetwork/qhostaddress.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qabstractsocket.h \
+		network/MulticastSender.h
+	/home/mint/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/mint/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/mint/polyworld-server -I/home/mint/polyworld-server -I/home/mint/polyworld-server/agent -I/home/mint/polyworld-server/app -I/home/mint/polyworld-server/brain -I/home/mint/polyworld-server/brain/groups -I/home/mint/polyworld-server/brain/sheets -I/home/mint/polyworld-server/complexity -I/home/mint/polyworld-server/critter -I/home/mint/polyworld-server/environment -I/home/mint/polyworld-server/genome -I/home/mint/polyworld-server/genome/groups -I/home/mint/polyworld-server/genome/sheets -I/home/mint/polyworld-server/graphics -I/home/mint/polyworld-server/logs -I/home/mint/polyworld-server/monitor -I/home/mint/polyworld-server/network -I/home/mint/polyworld-server/proplib -I/home/mint/polyworld-server/ui -I/home/mint/polyworld-server/ui/gui -I/home/mint/polyworld-server/ui/network -I/home/mint/polyworld-server/ui/term -I/home/mint/polyworld-server/utils -I/usr/include/python2.7 -I/home/mint/Qt/5.3/gcc_64/include -I/home/mint/Qt/5.3/gcc_64/include/QtOpenGL -I/home/mint/Qt/5.3/gcc_64/include/QtWidgets -I/home/mint/Qt/5.3/gcc_64/include/QtNetwork -I/home/mint/Qt/5.3/gcc_64/include/QtGui -I/home/mint/Qt/5.3/gcc_64/include/QtCore network/MulticastSender.h -o moc_MulticastSender.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -10150,7 +10262,11 @@ main.o: main/main.cp ../Qt/5.3/gcc_64/include/QtOpenGL/qgl.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/QTcpServer \
 		../Qt/5.3/gcc_64/include/QtNetwork/qtcpserver.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/qabstractsocket.h \
-		../Qt/5.3/gcc_64/include/QtNetwork/qhostaddress.h
+		../Qt/5.3/gcc_64/include/QtNetwork/qhostaddress.h \
+		network/MulticastSender.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/QDialog \
+		../Qt/5.3/gcc_64/include/QtWidgets/qdialog.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/QHostAddress
 	$(CC) -c $(CFLAGS) $(INCPATH) -o main.o main/main.cp
 
 SceneRenderer.o: monitor/SceneRenderer.cp monitor/SceneRenderer.h \
@@ -14286,6 +14402,482 @@ SendWorldFileThread.o: network/SendWorldFileThread.cpp network/SendWorldFileThre
 		../Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SendWorldFileThread.o network/SendWorldFileThread.cpp
 
+MulticastSender.o: network/MulticastSender.cpp ../Qt/5.3/gcc_64/include/QtWidgets/QtWidgets \
+		../Qt/5.3/gcc_64/include/QtWidgets/QtWidgetsDepends \
+		../Qt/5.3/gcc_64/include/QtCore/QtCore \
+		../Qt/5.3/gcc_64/include/QtCore/QtCoreDepends \
+		../Qt/5.3/gcc_64/include/QtCore/qabstractanimation.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobject.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		../Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		../Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		../Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlist.h \
+		../Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
+		../Qt/5.3/gcc_64/include/QtCore/qiterator.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcoreevent.h \
+		../Qt/5.3/gcc_64/include/QtCore/qscopedpointer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmetatype.h \
+		../Qt/5.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		../Qt/5.3/gcc_64/include/QtCore/qisenum.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
+		../Qt/5.3/gcc_64/include/QtCore/qanimationgroup.h \
+		../Qt/5.3/gcc_64/include/QtCore/qparallelanimationgroup.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpauseanimation.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpropertyanimation.h \
+		../Qt/5.3/gcc_64/include/QtCore/qvariantanimation.h \
+		../Qt/5.3/gcc_64/include/QtCore/qeasingcurve.h \
+		../Qt/5.3/gcc_64/include/QtCore/qvector.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpoint.h \
+		../Qt/5.3/gcc_64/include/QtCore/qvariant.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmap.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpair.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdebug.h \
+		../Qt/5.3/gcc_64/include/QtCore/qhash.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtextstream.h \
+		../Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlocale.h \
+		../Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
+		../Qt/5.3/gcc_64/include/QtCore/qset.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
+		../Qt/5.3/gcc_64/include/QtCore/qregexp.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsequentialanimationgroup.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtextcodec.h \
+		../Qt/5.3/gcc_64/include/QtCore/qendian.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlibraryinfo.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdatetime.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbuffer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdir.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfileinfo.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfile.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfiledevice.h \
+		../Qt/5.3/gcc_64/include/QtCore/qdiriterator.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfileselector.h \
+		../Qt/5.3/gcc_64/include/QtCore/QObject \
+		../Qt/5.3/gcc_64/include/QtCore/QStringList \
+		../Qt/5.3/gcc_64/include/QtCore/qfilesystemwatcher.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlockfile.h \
+		../Qt/5.3/gcc_64/include/QtCore/qloggingcategory.h \
+		../Qt/5.3/gcc_64/include/QtCore/qprocess.h \
+		../Qt/5.3/gcc_64/include/QtCore/qresource.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsavefile.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsettings.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstandardpaths.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtemporarydir.h \
+		../Qt/5.3/gcc_64/include/QtCore/QScopedPointer \
+		../Qt/5.3/gcc_64/include/QtCore/qtemporaryfile.h \
+		../Qt/5.3/gcc_64/include/QtCore/qurl.h \
+		../Qt/5.3/gcc_64/include/QtCore/qurlquery.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstractitemmodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstractproxymodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qidentityproxymodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qitemselectionmodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsortfilterproxymodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstringlistmodel.h \
+		../Qt/5.3/gcc_64/include/QtCore/qjsonarray.h \
+		../Qt/5.3/gcc_64/include/QtCore/qjsonvalue.h \
+		../Qt/5.3/gcc_64/include/QtCore/qjsondocument.h \
+		../Qt/5.3/gcc_64/include/QtCore/qjsonobject.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstracteventdispatcher.h \
+		../Qt/5.3/gcc_64/include/QtCore/qeventloop.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbasictimer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcoreapplication.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmath.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmetaobject.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmimedata.h \
+		../Qt/5.3/gcc_64/include/QtCore/qobjectcleanuphandler.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpointer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsharedmemory.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsignalmapper.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsocketnotifier.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsystemsemaphore.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtimer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtranslator.h \
+		../Qt/5.3/gcc_64/include/QtCore/qwineventnotifier.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmimedatabase.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmimetype.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfactoryinterface.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlibrary.h \
+		../Qt/5.3/gcc_64/include/QtCore/qplugin.h \
+		../Qt/5.3/gcc_64/include/QtCore/qpluginloader.h \
+		../Qt/5.3/gcc_64/include/QtCore/quuid.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstractstate.h \
+		../Qt/5.3/gcc_64/include/QtCore/qabstracttransition.h \
+		../Qt/5.3/gcc_64/include/QtCore/qeventtransition.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfinalstate.h \
+		../Qt/5.3/gcc_64/include/QtCore/qhistorystate.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsignaltransition.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstate.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstatemachine.h \
+		../Qt/5.3/gcc_64/include/QtCore/qexception.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfuture.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfutureinterface.h \
+		../Qt/5.3/gcc_64/include/QtCore/qrunnable.h \
+		../Qt/5.3/gcc_64/include/QtCore/qresultstore.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfuturesynchronizer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qfuturewatcher.h \
+		../Qt/5.3/gcc_64/include/QtCore/qreadwritelock.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsemaphore.h \
+		../Qt/5.3/gcc_64/include/QtCore/qthread.h \
+		../Qt/5.3/gcc_64/include/QtCore/qthreadpool.h \
+		../Qt/5.3/gcc_64/include/QtCore/qthreadstorage.h \
+		../Qt/5.3/gcc_64/include/QtCore/qwaitcondition.h \
+		../Qt/5.3/gcc_64/include/QtCore/qarraydataops.h \
+		../Qt/5.3/gcc_64/include/QtCore/qarraydatapointer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbitarray.h \
+		../Qt/5.3/gcc_64/include/QtCore/qbytearraymatcher.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcache.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcollator.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcommandlineoption.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcommandlineparser.h \
+		../Qt/5.3/gcc_64/include/QtCore/qcryptographichash.h \
+		../Qt/5.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../Qt/5.3/gcc_64/include/QtCore/qline.h \
+		../Qt/5.3/gcc_64/include/QtCore/qlinkedlist.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmargins.h \
+		../Qt/5.3/gcc_64/include/QtCore/qmessageauthenticationcode.h \
+		../Qt/5.3/gcc_64/include/QtCore/qqueue.h \
+		../Qt/5.3/gcc_64/include/QtCore/qrect.h \
+		../Qt/5.3/gcc_64/include/QtCore/qsize.h \
+		../Qt/5.3/gcc_64/include/QtCore/qregularexpression.h \
+		../Qt/5.3/gcc_64/include/QtCore/qscopedvaluerollback.h \
+		../Qt/5.3/gcc_64/include/QtCore/qstack.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtextboundaryfinder.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtimeline.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtimezone.h \
+		../Qt/5.3/gcc_64/include/QtCore/qxmlstream.h \
+		../Qt/5.3/gcc_64/include/QtCore/qtcoreversion.h \
+		../Qt/5.3/gcc_64/include/QtGui/QtGui \
+		../Qt/5.3/gcc_64/include/QtGui/QtGuiDepends \
+		../Qt/5.3/gcc_64/include/QtGui/qaccessible.h \
+		../Qt/5.3/gcc_64/include/QtGui/qcolor.h \
+		../Qt/5.3/gcc_64/include/QtGui/qrgb.h \
+		../Qt/5.3/gcc_64/include/QtGui/qevent.h \
+		../Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
+		../Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../Qt/5.3/gcc_64/include/QtGui/qregion.h \
+		../Qt/5.3/gcc_64/include/QtGui/qkeysequence.h \
+		../Qt/5.3/gcc_64/include/QtGui/qvector2d.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtouchdevice.h \
+		../Qt/5.3/gcc_64/include/QtGui/qaccessiblebridge.h \
+		../Qt/5.3/gcc_64/include/QtGui/qaccessibleobject.h \
+		../Qt/5.3/gcc_64/include/QtGui/qaccessibleplugin.h \
+		../Qt/5.3/gcc_64/include/QtGui/qbitmap.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpixmap.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpaintdevice.h \
+		../Qt/5.3/gcc_64/include/QtGui/qimage.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtransform.h \
+		../Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
+		../Qt/5.3/gcc_64/include/QtGui/qicon.h \
+		../Qt/5.3/gcc_64/include/QtGui/qiconengine.h \
+		../Qt/5.3/gcc_64/include/QtGui/qiconengineplugin.h \
+		../Qt/5.3/gcc_64/include/QtGui/qimageiohandler.h \
+		../Qt/5.3/gcc_64/include/QtGui/qimagereader.h \
+		../Qt/5.3/gcc_64/include/QtGui/qimagewriter.h \
+		../Qt/5.3/gcc_64/include/QtGui/qmovie.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpicture.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpictureformatplugin.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpixmapcache.h \
+		../Qt/5.3/gcc_64/include/QtGui/qstandarditemmodel.h \
+		../Qt/5.3/gcc_64/include/QtGui/qbrush.h \
+		../Qt/5.3/gcc_64/include/QtGui/qfont.h \
+		../Qt/5.3/gcc_64/include/QtGui/qclipboard.h \
+		../Qt/5.3/gcc_64/include/QtGui/qcursor.h \
+		../Qt/5.3/gcc_64/include/QtGui/qdrag.h \
+		../Qt/5.3/gcc_64/include/QtGui/qgenericplugin.h \
+		../Qt/5.3/gcc_64/include/QtGui/qgenericpluginfactory.h \
+		../Qt/5.3/gcc_64/include/QtGui/qguiapplication.h \
+		../Qt/5.3/gcc_64/include/QtGui/qinputmethod.h \
+		../Qt/5.3/gcc_64/include/QtGui/qoffscreensurface.h \
+		../Qt/5.3/gcc_64/include/QtGui/qsurface.h \
+		../Qt/5.3/gcc_64/include/QtGui/qsurfaceformat.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopenglcontext.h \
+		../Qt/5.3/gcc_64/include/QtGui/QSurfaceFormat \
+		../Qt/5.3/gcc_64/include/QtGui/qopengl.h \
+		../Qt/5.3/gcc_64/include/QtCore/qt_windows.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopengles2ext.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopenglext.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopenglversionfunctions.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpalette.h \
+		../Qt/5.3/gcc_64/include/QtGui/qscreen.h \
+		../Qt/5.3/gcc_64/include/QtCore/QList \
+		../Qt/5.3/gcc_64/include/QtCore/QRect \
+		../Qt/5.3/gcc_64/include/QtCore/QSize \
+		../Qt/5.3/gcc_64/include/QtCore/QSizeF \
+		../Qt/5.3/gcc_64/include/QtGui/QTransform \
+		../Qt/5.3/gcc_64/include/QtGui/qsessionmanager.h \
+		../Qt/5.3/gcc_64/include/QtGui/qstylehints.h \
+		../Qt/5.3/gcc_64/include/QtGui/qwindow.h \
+		../Qt/5.3/gcc_64/include/QtCore/QEvent \
+		../Qt/5.3/gcc_64/include/QtCore/QMargins \
+		../Qt/5.3/gcc_64/include/QtGui/qgenericmatrix.h \
+		../Qt/5.3/gcc_64/include/QtGui/qmatrix4x4.h \
+		../Qt/5.3/gcc_64/include/QtGui/qvector3d.h \
+		../Qt/5.3/gcc_64/include/QtGui/qvector4d.h \
+		../Qt/5.3/gcc_64/include/QtGui/qquaternion.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopenglbuffer.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopengldebug.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopenglframebufferobject.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopenglfunctions.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopenglpaintdevice.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopenglpixeltransferoptions.h \
+		../Qt/5.3/gcc_64/include/QtCore/QSharedDataPointer \
+		../Qt/5.3/gcc_64/include/QtGui/qopenglshaderprogram.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopengltexture.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopengltimerquery.h \
+		../Qt/5.3/gcc_64/include/QtGui/qopenglvertexarrayobject.h \
+		../Qt/5.3/gcc_64/include/QtGui/qbackingstore.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpagedpaintdevice.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpagelayout.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpagesize.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpaintengine.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpainter.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpen.h \
+		../Qt/5.3/gcc_64/include/QtGui/qfontinfo.h \
+		../Qt/5.3/gcc_64/include/QtGui/qfontmetrics.h \
+		../Qt/5.3/gcc_64/include/QtGui/qpdfwriter.h \
+		../Qt/5.3/gcc_64/include/QtGui/qabstracttextdocumentlayout.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtextlayout.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtextformat.h \
+		../Qt/5.3/gcc_64/include/QtGui/qglyphrun.h \
+		../Qt/5.3/gcc_64/include/QtGui/qrawfont.h \
+		../Qt/5.3/gcc_64/include/QtGui/qfontdatabase.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtextcursor.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtextdocument.h \
+		../Qt/5.3/gcc_64/include/QtGui/qstatictext.h \
+		../Qt/5.3/gcc_64/include/QtGui/qsyntaxhighlighter.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtextobject.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtextdocumentfragment.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtextdocumentwriter.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtextlist.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtexttable.h \
+		../Qt/5.3/gcc_64/include/QtGui/qdesktopservices.h \
+		../Qt/5.3/gcc_64/include/QtGui/qvalidator.h \
+		../Qt/5.3/gcc_64/include/QtGui/qtguiversion.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qaccessiblewidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qcolordialog.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qdialog.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qwidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qerrormessage.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qfiledialog.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qfilesystemmodel.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qfontdialog.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qinputdialog.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qlineedit.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qframe.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qmessagebox.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qprogressdialog.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qwizard.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicseffect.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicsanchorlayout.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicsitem.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicslayout.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicslayoutitem.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicsgridlayout.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicsitemanimation.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicslinearlayout.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicsproxywidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicswidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicstransform.h \
+		../Qt/5.3/gcc_64/include/QtGui/QVector3D \
+		../Qt/5.3/gcc_64/include/QtGui/QMatrix4x4 \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgraphicsview.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qscrollarea.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qstyleoption.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qabstractspinbox.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qslider.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qabstractslider.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qstyle.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtabbar.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtabwidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qrubberband.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qabstractitemview.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qcolumnview.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qdatawidgetmapper.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qdirmodel.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qfileiconprovider.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qheaderview.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qitemdelegate.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qitemeditorfactory.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qlistview.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qlistwidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qstyleditemdelegate.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtableview.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtablewidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtreeview.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtreewidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtreewidgetitemiterator.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qaction.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qactiongroup.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qapplication.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qboxlayout.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qlayout.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qlayoutitem.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgridlayout.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qformlayout.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/QLayout \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgesture.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgesturerecognizer.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qshortcut.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qstackedlayout.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtooltip.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qwhatsthis.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qwidgetaction.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qkeyeventtransition.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qmouseeventtransition.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qcommonstyle.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qdrawutil.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qproxystyle.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/QCommonStyle \
+		../Qt/5.3/gcc_64/include/QtWidgets/qstylefactory.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qstylepainter.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qstyleplugin.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qcolormap.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qcompleter.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qscroller.h \
+		../Qt/5.3/gcc_64/include/QtCore/QPointF \
+		../Qt/5.3/gcc_64/include/QtWidgets/QScrollerProperties \
+		../Qt/5.3/gcc_64/include/QtWidgets/qscrollerproperties.h \
+		../Qt/5.3/gcc_64/include/QtCore/QMetaType \
+		../Qt/5.3/gcc_64/include/QtCore/QVariant \
+		../Qt/5.3/gcc_64/include/QtWidgets/qsystemtrayicon.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qundogroup.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qundostack.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qundoview.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qabstractbutton.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qbuttongroup.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qcalendarwidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qcheckbox.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qcombobox.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qcommandlinkbutton.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qpushbutton.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qdatetimeedit.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qdial.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qdialogbuttonbox.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qdockwidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qfocusframe.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qfontcombobox.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qgroupbox.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qkeysequenceedit.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qlabel.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qlcdnumber.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qmainwindow.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qmdiarea.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qmdisubwindow.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qmenu.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qmenubar.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qplaintextedit.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtextedit.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qprogressbar.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qradiobutton.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qscrollbar.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qsizegrip.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qspinbox.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qsplashscreen.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qsplitter.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qstackedwidget.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qstatusbar.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtextbrowser.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtoolbar.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtoolbox.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtoolbutton.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/qtwidgetsversion.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/QtNetwork \
+		../Qt/5.3/gcc_64/include/QtNetwork/QtNetworkDepends \
+		../Qt/5.3/gcc_64/include/QtNetwork/qabstractnetworkcache.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qnetworkrequest.h \
+		../Qt/5.3/gcc_64/include/QtCore/QString \
+		../Qt/5.3/gcc_64/include/QtCore/QUrl \
+		../Qt/5.3/gcc_64/include/QtNetwork/qhttpmultipart.h \
+		../Qt/5.3/gcc_64/include/QtCore/QByteArray \
+		../Qt/5.3/gcc_64/include/QtCore/QIODevice \
+		../Qt/5.3/gcc_64/include/QtNetwork/QNetworkRequest \
+		../Qt/5.3/gcc_64/include/QtNetwork/qnetworkaccessmanager.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/QSslConfiguration \
+		../Qt/5.3/gcc_64/include/QtNetwork/qsslconfiguration.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qsslsocket.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qtcpsocket.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qabstractsocket.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qsslerror.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qsslcertificate.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qssl.h \
+		../Qt/5.3/gcc_64/include/QtCore/QFlags \
+		../Qt/5.3/gcc_64/include/QtNetwork/qnetworkcookie.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qnetworkcookiejar.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qnetworkdiskcache.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qnetworkreply.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/QNetworkAccessManager \
+		../Qt/5.3/gcc_64/include/QtNetwork/qnetworkconfigmanager.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qnetworkconfiguration.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qnetworksession.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qnetworkinterface.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qhostaddress.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qauthenticator.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qdnslookup.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qhostinfo.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qnetworkproxy.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qlocalserver.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qlocalsocket.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qtcpserver.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qudpsocket.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qsslcertificateextension.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qsslcipher.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qsslkey.h \
+		../Qt/5.3/gcc_64/include/QtNetwork/qtnetworkversion.h \
+		network/MulticastSender.h \
+		../Qt/5.3/gcc_64/include/QtWidgets/QDialog \
+		../Qt/5.3/gcc_64/include/QtNetwork/QHostAddress
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MulticastSender.o network/MulticastSender.cpp
+
 moc_Simulation.o: moc_Simulation.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Simulation.o moc_Simulation.cpp
 
@@ -14345,6 +14937,9 @@ moc_NetworkServer.o: moc_NetworkServer.cpp
 
 moc_NetworkThread.o: moc_NetworkThread.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_NetworkThread.o moc_NetworkThread.cpp
+
+moc_MulticastSender.o: moc_MulticastSender.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_MulticastSender.o moc_MulticastSender.cpp
 
 ####### Install
 

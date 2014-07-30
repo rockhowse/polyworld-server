@@ -20,7 +20,7 @@
 
 // Network
 #include "NetworkDialog.h"
-
+#include "MulticastSender.h"
 
 using namespace std;
 
@@ -144,6 +144,12 @@ int main( int argc, char** argv )
         NetworkDialog networkDialog;
         networkDialog.show();
         qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+
+        MulticastSender multicastSender;
+        multicastSender.show();
+
+        // send the multicast step number over the network
+        QObject::connect(simulation, SIGNAL(stepChanged(int)), &multicastSender, SLOT(setStep(int)));
 
         exitval = app.exec();
         delete mainWindow;

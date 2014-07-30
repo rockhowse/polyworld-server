@@ -792,9 +792,12 @@ void TSimulation::Step()
 		fEpoch += fEpochFrequency;
 
 		fRecentFittest->clear();
-	}
+    }
 
 	logs->postEvent( StepEndEvent() );
+
+    // notify the network clients the step has increased
+    emit stepChanged(fStep);
 }
 
 //---------------------------------------------------------------------------
@@ -876,7 +879,7 @@ void TSimulation::InitGround()
     fWorldSet.Add(&fGround);
 }
 
-//---------------------------------------------------------------------------
+//---------------------------------------------------------------ep------------
 // TSimulation::InitAgents
 //---------------------------------------------------------------------------
 void TSimulation::InitAgents()

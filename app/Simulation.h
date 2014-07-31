@@ -317,7 +317,7 @@ private:
 	float fMinMateFraction;
 	long fEatWait;
 	long fMateWait;
-	long fMiscAgents; // number of agents born without intervening creation before miscegenation function kicks in
+    long fMiscAgents; // number of agents born without intervening creation before miscegenation function kicks in
 	float fMateThreshold;
 	float fMaxMateVelocity;
 	float fMinEatVelocity;

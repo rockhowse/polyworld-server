@@ -449,6 +449,8 @@ TSimulation::TSimulation( string worldfilePath, string monitorPath )
 	// ---
 	monitorManager = new MonitorManager( this, monitorPath );
 
+    const char * derp = monitorPath.c_str();
+
 	// ---
 	// --- Init Event Filtering
 	// ---

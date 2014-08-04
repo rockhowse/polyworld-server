@@ -798,8 +798,12 @@ void TSimulation::Step()
 
 	logs->postEvent( StepEndEvent() );
 
+    agent* lastAgent;
+    objectxsortedlist::gXSortedObjects.lastObj(AGENTTYPE, (gobject**) &lastAgent );
+
     // notify the network clients the step has increased
-    emit stepChanged(fStep);
+    // added a push of the last agent's coordinates
+    emit stepChanged(fStep, lastAgent);
 }
 
 //---------------------------------------------------------------------------

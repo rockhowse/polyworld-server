@@ -139,7 +139,7 @@ public:
 
 signals:
 	void ended();
-    void stepChanged(int simStep);
+    void stepChanged(int simStep, agent * sendAgent);
 	
 private:
 	void InitCppProperties( proplib::Document *docWorldFile );

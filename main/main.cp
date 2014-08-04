@@ -149,7 +149,7 @@ int main( int argc, char** argv )
         multicastSender.show();
 
         // send the multicast step number over the network
-        QObject::connect(simulation, SIGNAL(stepChanged(int)), &multicastSender, SLOT(setStep(int)));
+        QObject::connect(simulation, SIGNAL(stepChanged(int, agent*)), &multicastSender, SLOT(setStep(int, agent*)));
 
         exitval = app.exec();
         delete mainWindow;

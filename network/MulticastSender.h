@@ -44,6 +44,8 @@
 #include <QDialog>
 #include <QHostAddress>
 
+#include <agent.h>
+
 QT_BEGIN_NAMESPACE
 class QDialogButtonBox;
 class QLabel;
@@ -63,8 +65,8 @@ public:
 private slots:
     void ttlChanged(int newTtl);
     void startSending();
-    void sendDatagram();
-    void setStep(int curStep);
+    void sendDatagram(agent *sendAgent);
+    void setStep(int curStep, agent *sendAgent);
 
 private:
     QLabel *statusLabel;

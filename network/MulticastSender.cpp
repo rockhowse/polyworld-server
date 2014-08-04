@@ -90,13 +90,13 @@ void MulticastSender::ttlChanged(int newTtl)
     udpSocket->setSocketOption(QAbstractSocket::MulticastTtlOption, newTtl);
 }
 
-void MulticastSender::setStep(int curStep)
+void MulticastSender::setStep(int curStep, agent * sendAgent)
 {
     simStep = curStep;
 
     if(sendMulticast) {
         // send the dataGram
-        sendDatagram();
+        sendDatagram(sendAgent);
     }
 }
 
@@ -107,7 +107,7 @@ void MulticastSender::startSending()
     //timer->start(1000);
 }
 
-void MulticastSender::sendDatagram()
+void MulticastSender::sendDatagram(agent * sendAgent)
 {
     struct SimDataPacket {
         int simStep;
@@ -121,10 +121,10 @@ void MulticastSender::sendDatagram()
     SimDataPacket *sdp = new SimDataPacket();
 
     sdp->simStep = simStep;
-    sdp->agentX = 100;
-    sdp->agentY = 150;
-    sdp->agentZ = 100;
-    sdp->agentYaw = 200.00;
+    sdp->agentX = sendAgent->x();
+    sdp->agentY = sendAgent->y();
+    sdp->agentZ = sendAgent->z();
+    sdp->agentYaw = sendAgent->yaw();
 
     QByteArray datagram;
     QDataStream out(&datagram, QIODevice::WriteOnly);

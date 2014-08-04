@@ -109,10 +109,37 @@ void MulticastSender::startSending()
 
 void MulticastSender::sendDatagram()
 {
+    struct SimDataPacket {
+        int simStep;
+        float agentX;
+        float agentY;
+        float agentZ;
+        float agentYaw;
+    };
+
+
+    SimDataPacket *sdp = new SimDataPacket();
+
+    sdp->simStep = simStep;
+    sdp->agentX = 100;
+    sdp->agentY = 150;
+    sdp->agentZ = 100;
+    sdp->agentYaw = 200.00;
+
+    QByteArray datagram;
+    QDataStream out(&datagram, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_3);
+    out << sdp->simStep
+        << sdp->agentX
+        << sdp->agentY
+        << sdp->agentZ
+        << sdp->agentYaw;
+
     //statusLabel->setText(tr("Now sending datagram %1").arg(messageNo));
     //QByteArray datagram = "Multicast message " + QByteArray::number(messageNo);
-    QByteArray datagram = "Simulation Step [" + QByteArray::number(simStep) + "]";
-    udpSocket->writeDatagram(datagram.data(), datagram.size(),
-                             groupAddress, 45454);
+    //QByteArray datagram = "Simulation Step [" + QByteArray::number(simStep) + "]";
+    udpSocket->writeDatagram(datagram, groupAddress, 45454);
     //++messageNo;
+
+    delete(sdp);
 }

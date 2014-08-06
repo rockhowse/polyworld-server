@@ -104,6 +104,8 @@ double TSimulation::fFramesPerSecondInstantaneous;
 double TSimulation::fSecondsPerFrameInstantaneous;
 double TSimulation::fTimeStart;
 
+unsigned long TSimulation::fCurAgentID;
+
 //---------------------------------------------------------------------------
 // Prototypes
 //---------------------------------------------------------------------------
@@ -239,6 +241,8 @@ TSimulation::TSimulation( string worldfilePath, string monitorPath )
 		agentPovRenderer(NULL)
 {
 	fStep = 0;
+    fCurAgentID = 0;
+
 	memset( fNumberAliveWithMetabolism, 0, sizeof(fNumberAliveWithMetabolism) );
 
 	fCurrentBrainStats.sheets.synapseCount = new Stat *[ sheets::Sheet::__NTYPES ];
@@ -999,12 +1003,16 @@ void TSimulation::InitAgents()
 			objectxsortedlist::gXSortedObjects.add(c);	// stores c->listLink
 
 			c->Domain(id);
-			fDomains[id].numAgents++;
+
+            fDomains[id].numAgents++;
 
 			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			// !!! POST SERIAL
 			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			fScheduler.postSerial( new UpdateStats(c) );
+
+            // set the agentID from the simulation fAgentIDs
+            c->SetAgentID(fAgentIDs++);
 
 			Birth( c, LifeSpan::BR_SIMINIT );
 		}
@@ -1072,6 +1080,9 @@ void TSimulation::InitAgents()
 		// !!! POST SERIAL
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		fScheduler.postSerial( new UpdateStats(c) );
+
+        // set the agentID from the simulation fAgentIDs
+        c->SetAgentID(fAgentIDs++);
 
 		Birth(c, LifeSpan::BR_SIMINIT );
 	}

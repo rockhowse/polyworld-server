@@ -101,6 +101,9 @@ public:
 	static double fSecondsPerFrameInstantaneous;
 	static double fTimeStart;
 
+    // needed to track every agent ever created.
+    static unsigned long fCurAgentID;
+
 	int fEpochFrequency;
 	long fEpoch;
 	

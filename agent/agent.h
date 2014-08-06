@@ -123,7 +123,8 @@ public:
 		bool	enableCarry;
 		bool	enableVisionPitch;
 		bool	enableVisionYaw;
-		
+        unsigned long    agentID;
+
 	} config;
 
 	static void processWorldfile( proplib::Document &doc );
@@ -154,6 +155,7 @@ public:
     void SetVelocityY(float f);
     void SetVelocityZ(float f);
     void SetMass(float f);
+    void SetAgentID(unsigned long agentID);
     
     virtual void draw();
 	void setGenomeReady();
@@ -250,12 +252,13 @@ public:
 	float CarryEnergy( void );
 	void PrintCarries( FILE* );
 	TSimulation* fSimulation;
+    unsigned long agentID();
 
 	struct BrainAnalysisParms
 	{
 		std::string functionPath;
 	} brainAnalysisParms;
-	
+
 protected:
     void NumberToName();
     void SetGeometry();
@@ -358,6 +361,7 @@ inline void agent::SetMass(float f) { fMass = f; }
 inline void agent::SetLastX(float x) { fLastPosition[0] = x; }
 inline void agent::SetLastY(float y) { fLastPosition[1] = y; }
 inline void agent::SetLastZ(float z) { fLastPosition[2] = z; }
+inline void agent::SetAgentID(unsigned long agentID) { agent::config.agentID = agentID; }
 inline float agent::LastX() { return fLastPosition[0]; }
 inline float agent::LastY() { return fLastPosition[1]; }
 inline float agent::LastZ() { return fLastPosition[2]; }
@@ -393,6 +397,7 @@ inline float agent::LastEatDistance() { return dist( fPosition[0], fPosition[2],
 inline genome::Genome* agent::Genes() { return fGenome; }
 inline NervousSystem* agent::GetNervousSystem() { return fCns; }
 inline long agent::Number() { return getTypeNumber(); }
+inline unsigned long agent::agentID() { return agent::config.agentID; }
 // replace both occurences of 0.8 with actual estimate of fraction of lifespan agent will live
 inline float agent::CurrentHeuristicFitness() { return fHeuristicFitness; }
 #define UseProjectedHeuristicFitness 1

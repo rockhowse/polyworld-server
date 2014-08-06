@@ -65,7 +65,7 @@ public:
 private slots:
     void ttlChanged(int newTtl);
     void startSending();
-    void sendDatagram(agent *sendAgent);
+    void sendDatagram(agent *sendAgent, int msgType);
     void setStep(int curStep, agent *sendAgent);
 
 private:

@@ -143,6 +143,8 @@ public:
 signals:
 	void ended();
     void stepChanged(int simStep, agent * sendAgent);
+    void agentBirth(agent * sendAgent);
+    void stepDeath(agent * sendAgent);
 	
 private:
 	void InitCppProperties( proplib::Document *docWorldFile );

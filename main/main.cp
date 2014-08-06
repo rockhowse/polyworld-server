@@ -151,6 +151,14 @@ int main( int argc, char** argv )
         // send the multicast step number over the network
         QObject::connect(simulation, SIGNAL(stepChanged(int, agent*)), &multicastSender, SLOT(setStep(int, agent*)));
 
+        // send the multicast agent birth over the network
+        QObject::connect(simulation, SIGNAL(agentBirth(agent*)), &multicastSender, SLOT(agentBirth(agent*)));
+
+        // send the multicast agent death over the network
+        QObject::connect(simulation, SIGNAL(agentDeath(agent*)), &multicastSender, SLOT(agentDeath(agent*)));
+
+        // send the multicast agent death over the network
+
         exitval = app.exec();
         delete mainWindow;
 	}

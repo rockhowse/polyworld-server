@@ -43,10 +43,6 @@
 
 #include "MulticastSender.h"
 
-#define MSG_TYPE_STEP        0
-#define MSG_TYPE_AGENT_BIRTH 1
-#define MSG_TYPE_AGENT_DEATH 2
-
 MulticastSender::MulticastSender(QWidget *parent)
     : QDialog(parent)
 {
@@ -69,14 +65,14 @@ MulticastSender::MulticastSender(QWidget *parent)
     buttonBox->addButton(startButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
 
-    timer = new QTimer(this);
+    //timer = new QTimer(this);
     udpSocket = new QUdpSocket(this);
     messageNo = 1;
 
     connect(ttlSpinBox, SIGNAL(valueChanged(int)), this, SLOT(ttlChanged(int)));
     connect(startButton, SIGNAL(clicked()), this, SLOT(startSending()));
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
-    connect(timer, SIGNAL(timeout()), this, SLOT(sendDatagram()));
+    //connect(timer, SIGNAL(timeout()), this, SLOT(sendDatagram()));
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(statusLabel);
@@ -94,6 +90,13 @@ void MulticastSender::ttlChanged(int newTtl)
     udpSocket->setSocketOption(QAbstractSocket::MulticastTtlOption, newTtl);
 }
 
+/**
+ * Server side step has completed. Send the agent info to the clients
+ *
+ * @brief MulticastSender::setStep
+ * @param curStep
+ * @param sendAgent
+ */
 void MulticastSender::setStep(int curStep, agent * sendAgent)
 {
     simStep = curStep;
@@ -103,6 +106,35 @@ void MulticastSender::setStep(int curStep, agent * sendAgent)
         sendDatagram(sendAgent,MSG_TYPE_STEP);
     }
 }
+
+/**
+ * Notify the clients of an agent's birth
+ *
+ * @brief MulticastSender::agentBirth
+ * @param sendAgent
+ */
+void MulticastSender::agentBirth(agent * sendAgent)
+{
+    if(sendMulticast) {
+        // send the dataGram
+        sendDatagram(sendAgent,MSG_TYPE_AGENT_BIRTH);
+    }
+}
+
+/**
+ * Notify the clients of an agent's death
+ *
+ * @brief MulticastSender::agentDeath
+ * @param sendAgent
+ */
+void MulticastSender::agentDeath(agent * sendAgent)
+{
+    if(sendMulticast) {
+        // send the dataGram
+        sendDatagram(sendAgent,MSG_TYPE_AGENT_DEATH);
+    }
+}
+
 
 void MulticastSender::startSending()
 {
@@ -166,12 +198,18 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
         // 4. age (?)
         // ?. anything else set at birth
         case MSG_TYPE_AGENT_BIRTH:
+            {
+                int derp = 27;
+            }
             break;
 
         // On a death, send the following data so the agent can be removed from the client
         // 1. agentID
         // ?. anything else needed to smite the agent
         case MSG_TYPE_AGENT_DEATH:
+            {
+                int herp = 27;
+            }
             break;
     }
 }

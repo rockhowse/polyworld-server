@@ -55,6 +55,11 @@ class QUdpSocket;
 class QSpinBox;
 QT_END_NAMESPACE
 
+// types of messages this sender can send.
+#define MSG_TYPE_STEP        0
+#define MSG_TYPE_AGENT_BIRTH 1
+#define MSG_TYPE_AGENT_DEATH 2
+
 class MulticastSender : public QDialog
 {
     Q_OBJECT
@@ -67,6 +72,8 @@ private slots:
     void startSending();
     void sendDatagram(agent *sendAgent, int msgType);
     void setStep(int curStep, agent *sendAgent);
+    void agentBirth(agent *sendAgent);
+    void agentDeath(agent *sendAgent);
 
 private:
     QLabel *statusLabel;

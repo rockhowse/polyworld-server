@@ -104,7 +104,7 @@ double TSimulation::fFramesPerSecondInstantaneous;
 double TSimulation::fSecondsPerFrameInstantaneous;
 double TSimulation::fTimeStart;
 
-unsigned long TSimulation::fCurAgentID;
+unsigned long TSimulation::fAgentIDs;
 
 //---------------------------------------------------------------------------
 // Prototypes
@@ -241,7 +241,7 @@ TSimulation::TSimulation( string worldfilePath, string monitorPath )
 		agentPovRenderer(NULL)
 {
 	fStep = 0;
-    fCurAgentID = 0;
+    fAgentIDs = 0;
 
 	memset( fNumberAliveWithMetabolism, 0, sizeof(fNumberAliveWithMetabolism) );
 

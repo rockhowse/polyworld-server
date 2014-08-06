@@ -47,7 +47,6 @@
 #define MSG_TYPE_AGENT_BIRTH 1
 #define MSG_TYPE_AGENT_DEATH 2
 
-
 MulticastSender::MulticastSender(QWidget *parent)
     : QDialog(parent)
 {
@@ -119,39 +118,44 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
 
         // on a step send all agent locations
         case MSG_TYPE_STEP:
-            struct SimDataPacket {
-                int simStep;
-                float agentX;
-                float agentY;
-                float agentZ;
-                float agentYaw;
-            };
+
+            // have to use explicit block due to
+            // http://stackoverflow.com/questions/5685471/error-jump-to-case-label
+            {
+                struct SimDataPacket {
+                    int simStep;
+                    float agentX;
+                    float agentY;
+                    float agentZ;
+                    float agentYaw;
+                };
 
 
-            SimDataPacket *sdp = new SimDataPacket();
+                SimDataPacket *sdp = new SimDataPacket();
 
-            sdp->simStep = simStep;
-            sdp->agentX = sendAgent->x();
-            sdp->agentY = sendAgent->y();
-            sdp->agentZ = sendAgent->z();
-            sdp->agentYaw = sendAgent->yaw();
+                sdp->simStep = simStep;
+                sdp->agentX = sendAgent->x();
+                sdp->agentY = sendAgent->y();
+                sdp->agentZ = sendAgent->z();
+                sdp->agentYaw = sendAgent->yaw();
 
-            QByteArray datagram;
-            QDataStream out(&datagram, QIODevice::WriteOnly);
-            out.setVersion(QDataStream::Qt_4_3);
-            out << sdp->simStep
-                << sdp->agentX
-                << sdp->agentY
-                << sdp->agentZ
-                << sdp->agentYaw;
+                QByteArray datagram;
+                QDataStream out(&datagram, QIODevice::WriteOnly);
+                out.setVersion(QDataStream::Qt_4_3);
+                out << sdp->simStep
+                    << sdp->agentX
+                    << sdp->agentY
+                    << sdp->agentZ
+                    << sdp->agentYaw;
 
-            //statusLabel->setText(tr("Now sending datagram %1").arg(messageNo));
-            //QByteArray datagram = "Multicast message " + QByteArray::number(messageNo);
-            //QByteArray datagram = "Simulation Step [" + QByteArray::number(simStep) + "]";
-            udpSocket->writeDatagram(datagram, groupAddress, 45454);
-            //++messageNo;
+                //statusLabel->setText(tr("Now sending datagram %1").arg(messageNo));
+                //QByteArray datagram = "Multicast message " + QByteArray::number(messageNo);
+                //QByteArray datagram = "Simulation Step [" + QByteArray::number(simStep) + "]";
+                udpSocket->writeDatagram(datagram, groupAddress, 45454);
+                //++messageNo;
 
-            delete(sdp);
+                delete(sdp);
+            }
         break;
 
         // on a birth, send the following data from the agent so it can be created on the other side.

@@ -102,7 +102,7 @@ public:
 	static double fTimeStart;
 
     // needed to track every agent ever created.
-    static unsigned long fCurAgentID;
+    static unsigned long fAgentIDs;
 
 	int fEpochFrequency;
 	long fEpoch;

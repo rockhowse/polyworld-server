@@ -110,10 +110,10 @@ void MulticastSender::setStep(int curStep, agent * sendAgent)
 /**
  * Notify the clients of an agent's birth
  *
- * @brief MulticastSender::agentBirth
+ * @brief MulticastSender::agentBirthMsg
  * @param sendAgent
  */
-void MulticastSender::agentBirth(agent * sendAgent)
+void MulticastSender::agentBirthMsg(agent * sendAgent)
 {
     if(sendMulticast) {
         // send the dataGram
@@ -124,10 +124,10 @@ void MulticastSender::agentBirth(agent * sendAgent)
 /**
  * Notify the clients of an agent's death
  *
- * @brief MulticastSender::agentDeath
+ * @brief MulticastSender::agentDeathMsg
  * @param sendAgent
  */
-void MulticastSender::agentDeath(agent * sendAgent)
+void MulticastSender::agentDeathMsg(agent * sendAgent)
 {
     if(sendMulticast) {
         // send the dataGram

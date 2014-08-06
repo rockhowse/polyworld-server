@@ -67,13 +67,15 @@ class MulticastSender : public QDialog
 public:
     MulticastSender(QWidget *parent = 0);
 
+public slots:
+    void setStep(int curStep, agent *sendAgent);
+    void agentBirthMsg(agent *sendAgent);
+    void agentDeathMsg(agent *sendAgent);
+
 private slots:
     void ttlChanged(int newTtl);
     void startSending();
     void sendDatagram(agent *sendAgent, int msgType);
-    void setStep(int curStep, agent *sendAgent);
-    void agentBirth(agent *sendAgent);
-    void agentDeath(agent *sendAgent);
 
 private:
     QLabel *statusLabel;

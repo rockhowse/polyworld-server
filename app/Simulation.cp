@@ -1015,6 +1015,10 @@ void TSimulation::InitAgents()
             c->SetAgentID(fAgentIDs++);
 
 			Birth( c, LifeSpan::BR_SIMINIT );
+
+            // send the agent birth signal
+            // MulticastSender listens to this
+            emit agentBirth(c);
 		}
 
 		numSeededTotal += numSeededDomain;
@@ -1085,6 +1089,10 @@ void TSimulation::InitAgents()
         c->SetAgentID(fAgentIDs++);
 
 		Birth(c, LifeSpan::BR_SIMINIT );
+
+        // send the agent birth signal
+        // MulticastSender listens to this
+        emit agentBirth(c);
 	}
 }
 

@@ -140,6 +140,9 @@ public:
 	
 	Events* fEvents;
 
+    // maybe have to make this public so it can emit signals(?)
+    void InitAgents();
+
 signals:
 	void ended();
     void stepChanged(int simStep, agent * sendAgent);
@@ -150,7 +153,6 @@ private:
 	void InitCppProperties( proplib::Document *docWorldFile );
 	void InitFittest();
 	void InitGround();
-	void InitAgents();
 	void InitFood();
 	void InitBricks();
 	void InitBarriers();

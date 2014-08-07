@@ -104,8 +104,6 @@ double TSimulation::fFramesPerSecondInstantaneous;
 double TSimulation::fSecondsPerFrameInstantaneous;
 double TSimulation::fTimeStart;
 
-unsigned long TSimulation::fAgentIDs;
-
 //---------------------------------------------------------------------------
 // Prototypes
 //---------------------------------------------------------------------------
@@ -241,7 +239,6 @@ TSimulation::TSimulation( string worldfilePath, string monitorPath )
 		agentPovRenderer(NULL)
 {
 	fStep = 0;
-    fAgentIDs = 0;
 
 	memset( fNumberAliveWithMetabolism, 0, sizeof(fNumberAliveWithMetabolism) );
 
@@ -1011,9 +1008,6 @@ void TSimulation::InitAgents()
 			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			fScheduler.postSerial( new UpdateStats(c) );
 
-            // set the agentID from the simulation fAgentIDs
-            c->SetAgentID(fAgentIDs++);
-
 			Birth( c, LifeSpan::BR_SIMINIT );
 
             // send the agent birth signal
@@ -1084,9 +1078,6 @@ void TSimulation::InitAgents()
 		// !!! POST SERIAL
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		fScheduler.postSerial( new UpdateStats(c) );
-
-        // set the agentID from the simulation fAgentIDs
-        c->SetAgentID(fAgentIDs++);
 
 		Birth(c, LifeSpan::BR_SIMINIT );
 

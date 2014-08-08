@@ -82,7 +82,7 @@ MulticastSender::MulticastSender(QWidget *parent)
 
     setWindowTitle(tr("Multicast Sender"));
     ttlSpinBox->setValue(1);
-    sendMulticast = false;
+    sendMulticast = true;
 }
 
 void MulticastSender::ttlChanged(int newTtl)
@@ -211,7 +211,7 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
                 QDataStream out(&datagram, QIODevice::WriteOnly);
                 out.setVersion(QDataStream::Qt_4_3);
                 out << MSG_TYPE_AGENT_BIRTH
-                    << abp->agentNum
+                    << qint64(abp->agentNum)
                     << abp->agentHeight
                     << abp->agentSize;
 

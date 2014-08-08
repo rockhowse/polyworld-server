@@ -359,7 +359,6 @@ inline void agent::SetMass(float f) { fMass = f; }
 inline void agent::SetLastX(float x) { fLastPosition[0] = x; }
 inline void agent::SetLastY(float y) { fLastPosition[1] = y; }
 inline void agent::SetLastZ(float z) { fLastPosition[2] = z; }
-inline void agent::SetAgentID(unsigned long agentID) { agent::config.agentID = agentID; }
 inline float agent::LastX() { return fLastPosition[0]; }
 inline float agent::LastY() { return fLastPosition[1]; }
 inline float agent::LastZ() { return fLastPosition[2]; }

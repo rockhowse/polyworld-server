@@ -137,14 +137,6 @@ int main( int argc, char** argv )
 
 	if( ui == "gui" )
 	{
-        MainWindow *mainWindow = new MainWindow( simulationController );
-        simulationController->start();
-
-        // network code
-        NetworkDialog networkDialog;
-        networkDialog.show();
-        qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
-
         MulticastSender multicastSender;
         multicastSender.show();
 
@@ -157,13 +149,25 @@ int main( int argc, char** argv )
         // send the multicast agent death over the network
         QObject::connect(simulation, SIGNAL(agentDeath(agent*)), &multicastSender, SLOT(agentDeathMsg(agent*)));
 
-        // send the multicast agent death over the network
+        // we HAVE to have this after the connectors are linked up so the birth signals get sent
+        // initialize the world objects (ground/agents/bricks)
+        simulation->InitWorld();
+
+        MainWindow *mainWindow = new MainWindow( simulationController );
+        simulationController->start();
+
+        // network code
+        NetworkDialog networkDialog;
+        networkDialog.show();
+        qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 
         exitval = app.exec();
         delete mainWindow;
 	}
 	else if( ui == "term" )
 	{
+        simulation->InitWorld();
+
         TerminalUI *term = new TerminalUI( simulationController );
 		simulationController->start();
 		exitval = app.exec();

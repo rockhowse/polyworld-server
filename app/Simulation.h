@@ -137,8 +137,7 @@ public:
 	
 	Events* fEvents;
 
-    // maybe have to make this public so it can emit signals(?)
-    void InitAgents();
+    void InitWorld();
 
 signals:
 	void ended();
@@ -243,6 +242,8 @@ private:
 	void initFitnessMode();
 
 	void Dump();
+
+    void InitAgents();
 	
 	Scheduler fScheduler;
 	BusyFetchQueue<agent *> fUpdateBrainQueue;

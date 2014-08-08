@@ -174,17 +174,14 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
                 QByteArray datagram;
                 QDataStream out(&datagram, QIODevice::WriteOnly);
                 out.setVersion(QDataStream::Qt_4_3);
-                out << sdp->simStep
+                out << MSG_TYPE_STEP
+                    << sdp->simStep
                     << sdp->agentX
                     << sdp->agentY
                     << sdp->agentZ
                     << sdp->agentYaw;
 
-                //statusLabel->setText(tr("Now sending datagram %1").arg(messageNo));
-                //QByteArray datagram = "Multicast message " + QByteArray::number(messageNo);
-                //QByteArray datagram = "Simulation Step [" + QByteArray::number(simStep) + "]";
                 udpSocket->writeDatagram(datagram, groupAddress, 45454);
-                //++messageNo;
 
                 delete(sdp);
             }
@@ -199,7 +196,28 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
         // ?. anything else set at birth
         case MSG_TYPE_AGENT_BIRTH:
             {
-                int derp = 27;
+                struct AgentBirthPacket {
+                    long    agentNum;
+                    float   agentHeight;
+                    float   agentSize;
+                };
+
+                AgentBirthPacket * abp = new AgentBirthPacket();
+                abp->agentNum       = sendAgent->Number();
+                abp->agentHeight    = sendAgent->Height();
+                abp->agentSize      = sendAgent->Size();
+
+                QByteArray datagram;
+                QDataStream out(&datagram, QIODevice::WriteOnly);
+                out.setVersion(QDataStream::Qt_4_3);
+                out << MSG_TYPE_AGENT_BIRTH
+                    << abp->agentNum
+                    << abp->agentHeight
+                    << abp->agentSize;
+
+                udpSocket->writeDatagram(datagram, groupAddress, 45454);
+
+                delete(abp);
             }
             break;
 

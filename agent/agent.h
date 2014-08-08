@@ -123,8 +123,6 @@ public:
 		bool	enableCarry;
 		bool	enableVisionPitch;
 		bool	enableVisionYaw;
-        unsigned long    agentID;
-
 	} config;
 
 	static void processWorldfile( proplib::Document &doc );
@@ -155,8 +153,7 @@ public:
     void SetVelocityY(float f);
     void SetVelocityZ(float f);
     void SetMass(float f);
-    void SetAgentID(unsigned long agentID);
-    
+
     virtual void draw();
 	void setGenomeReady();
     void grow( long mateWait );    
@@ -211,6 +208,7 @@ public:
 	float Pickup();
 	float Drop();
     float Size();
+    float Height();
     long Age();
     long MaxAge();
     long LastMate();
@@ -389,6 +387,7 @@ inline float agent::Mate() { return outputNerves.mate->get(); }
 inline float agent::Pickup() { return outputNerves.pickup->get(); }
 inline float agent::Drop() { return outputNerves.drop->get(); }
 inline float agent::Size() { return geneCache.size; }
+inline float agent::Height() { return config.agentHeight;}
 inline long agent::Age() { return fAge; }
 inline long agent::MaxAge() { return geneCache.lifespan; }
 inline long agent::LastMate() { return fLastMate; }
@@ -397,7 +396,6 @@ inline float agent::LastEatDistance() { return dist( fPosition[0], fPosition[2],
 inline genome::Genome* agent::Genes() { return fGenome; }
 inline NervousSystem* agent::GetNervousSystem() { return fCns; }
 inline long agent::Number() { return getTypeNumber(); }
-inline unsigned long agent::agentID() { return agent::config.agentID; }
 // replace both occurences of 0.8 with actual estimate of fraction of lifespan agent will live
 inline float agent::CurrentHeuristicFitness() { return fHeuristicFitness; }
 #define UseProjectedHeuristicFitness 1

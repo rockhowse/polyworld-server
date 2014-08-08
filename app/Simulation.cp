@@ -401,41 +401,74 @@ TSimulation::TSimulation( string worldfilePath, string monitorPath )
 		}
 	}
 
-	// ---
-	// --- Init Ground
-	// ---
-	InitGround();
+    // ---
+    // --- Init Monitors
+    // ---
+    monitorManager = new MonitorManager( this, monitorPath );
 
-	// ---
-	// --- Init Agents, Food, Bricks, and Barriers
-	// ---
-	if (!fLoadState)
-	{
-		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-		// ^^^ MASTER TASK ExecInitAgents
-		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-		class ExecInitAgents : public ITask
-		{
-		public:
-			virtual void task_exec( TSimulation *sim )
-			{
-				sim->InitAgents();
-			}
-		} execInitAgents;
+    // ---
+    // --- Save worldfile data to run/ and dispose documents
+    // ---
+    {
+        SYSTEM( ("cp " + worldfile->getPath() + " run/original.wf").c_str() );
+        SYSTEM( ("cp " + schema->getPath() + " run/original.wfs").c_str() );
 
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// !!! EXEC MASTER
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		fScheduler.execMasterTask( this,
-								   execInitAgents,
-								   !fParallelInitAgents );
+        {
+            ofstream out( "run/normalized.wf" );
+            proplib::DocumentWriter writer( out );
+            writer.write( worldfile );
+        }
 
-		InitFood();
-		InitBricks();
-		InitBarriers();
-	}
+        delete worldfile;
+        delete schema;
 
-	fEatStatistics.Init();
+        proplib::Interpreter::dispose();
+    }
+
+    // this used to intialize the objects
+    // this has now been moved to a new function
+}
+
+/**
+ * This used to be located in the constructor. But now it's
+ * @brief TSimulation::InitWorld
+ */
+void TSimulation::InitWorld() {
+    // ---
+    // --- Init Ground
+    // ---
+    InitGround();
+
+    // ---
+    // --- Init Agents, Food, Bricks, and Barriers
+    // ---
+    if (!fLoadState)
+    {
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        // ^^^ MASTER TASK ExecInitAgents
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        class ExecInitAgents : public ITask
+        {
+        public:
+            virtual void task_exec( TSimulation *sim )
+            {
+                sim->InitAgents();
+            }
+        } execInitAgents;
+
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // !!! EXEC MASTER
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        fScheduler.execMasterTask( this,
+                                   execInitAgents,
+                                   !fParallelInitAgents );
+
+        InitFood();
+        InitBricks();
+        InitBarriers();
+    }
+
+    fEatStatistics.Init();
 
     fTotalFoodEnergyIn = fFoodEnergyIn;
     fTotalFoodEnergyOut = fFoodEnergyOut;
@@ -445,60 +478,34 @@ TSimulation::TSimulation( string worldfilePath, string monitorPath )
 
     fStage.SetSet(&fWorldSet);
 
-	// ---
-	// --- Init Monitors
-	// ---
-	monitorManager = new MonitorManager( this, monitorPath );
-
-    const char * derp = monitorPath.c_str();
-
-	// ---
-	// --- Init Event Filtering
-	// ---
-	if( fCalcComplexity )
-	{
-		bool eventFiltering = false;
-		for( unsigned int i = 0; i < fComplexityType.size(); i++ )
-		{
-			if( islower( fComplexityType[i] ) )
-			{
-				eventFiltering = true;
-				break;
-			}
-		}
-		if( eventFiltering )
-			fEvents = new Events( fMaxSteps );
-	}
-
-	// ---
-	// --- Save worldfile data to run/ and dispose documents
-	// ---
-	{
-		SYSTEM( ("cp " + worldfile->getPath() + " run/original.wf").c_str() );
-		SYSTEM( ("cp " + schema->getPath() + " run/original.wfs").c_str() );
-
-		{
-			ofstream out( "run/normalized.wf" );
-			proplib::DocumentWriter writer( out );
-			writer.write( worldfile );
-		}
-
-		delete worldfile;
-		delete schema;
-
-		proplib::Interpreter::dispose();
-	}
+    // ---
+    // --- Init Event Filtering
+    // ---
+    if( fCalcComplexity )
+    {
+        bool eventFiltering = false;
+        for( unsigned int i = 0; i < fComplexityType.size(); i++ )
+        {
+            if( islower( fComplexityType[i] ) )
+            {
+                eventFiltering = true;
+                break;
+            }
+        }
+        if( eventFiltering )
+            fEvents = new Events( fMaxSteps );
+    }
 
 #if DebugLockStep
-	fdls = fopen( "LockStep.log", "w" );
-	if( !fdls )
-	{
-		fprintf( stderr, "Unable to open LockStep.log\n" );
-		exit( 1 );
-	}
+    fdls = fopen( "LockStep.log", "w" );
+    if( !fdls )
+    {
+        fprintf( stderr, "Unable to open LockStep.log\n" );
+        exit( 1 );
+    }
 #endif
 
-	logs->postEvent( SimInitedEvent() );
+    logs->postEvent( SimInitedEvent() );
 }
 
 

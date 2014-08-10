@@ -156,6 +156,7 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
             {
                 struct SimDataPacket {
                     int simStep;
+                    long  agentNum;
                     float agentX;
                     float agentY;
                     float agentZ;
@@ -166,6 +167,7 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
                 SimDataPacket *sdp = new SimDataPacket();
 
                 sdp->simStep = simStep;
+                sdp->agentNum = sendAgent->Number();
                 sdp->agentX = sendAgent->x();
                 sdp->agentY = sendAgent->y();
                 sdp->agentZ = sendAgent->z();
@@ -176,6 +178,7 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
                 out.setVersion(QDataStream::Qt_4_3);
                 out << MSG_TYPE_STEP
                     << sdp->simStep
+                    << qint64(sdp->agentNum)
                     << sdp->agentX
                     << sdp->agentY
                     << sdp->agentZ

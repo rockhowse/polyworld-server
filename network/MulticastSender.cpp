@@ -247,7 +247,22 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
         // ?. anything else needed to smite the agent
         case MSG_TYPE_AGENT_DEATH:
             {
-                int herp = 27;
+                struct AgentDeathPacket {
+                    long    agentNum;
+                };
+
+                AgentDeathPacket * adp = new AgentDeathPacket();
+                adp->agentNum       = sendAgent->Number();
+
+                QByteArray datagram;
+                QDataStream out(&datagram, QIODevice::WriteOnly);
+                out.setVersion(QDataStream::Qt_4_3);
+                out << MSG_TYPE_AGENT_DEATH
+                    << qint64(adp->agentNum);
+
+                udpSocket->writeDatagram(datagram, groupAddress, 45454);
+
+                delete(adp);
             }
             break;
     }

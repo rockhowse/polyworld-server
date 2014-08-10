@@ -523,7 +523,7 @@ TSimulation::~TSimulation()
 	objectxsortedlist::gXSortedObjects.reset();
 	while (objectxsortedlist::gXSortedObjects.nextObj(AGENTTYPE, (gobject**)&a))
 	{
-		Kill( a, LifeSpan::DR_SIMEND );
+        Kill( a, LifeSpan::DR_SIMEND );
 	}
 
 	delete monitorManager;
@@ -3671,6 +3671,9 @@ void TSimulation::Birth( agent* a,
 void TSimulation::Kill( agent* c,
 						LifeSpan::DeathReason reason )
 {
+    // let listeners know an agent died
+    emit agentDeath(c);
+
 	AgentDeathEvent deathEvent(c, reason);
 
 	fNumberAlive--;

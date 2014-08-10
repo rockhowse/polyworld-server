@@ -116,7 +116,7 @@ MaxAgents {
 
 InitAgents {
   type    Int
-  default 1
+  default 10
   min     MinAgents
   max     MaxAgents
 }

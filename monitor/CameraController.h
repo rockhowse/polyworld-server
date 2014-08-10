@@ -65,7 +65,7 @@ class CameraController
 
 	void initRotation( const RotationParms &parms );
 	void initAgentTracking( const AgentTrackingParms &parms );
-
+    float getRotationAngle();
  private:
 	void setRotationAngle( float angle );
 	void setAgentTrackingTarget();

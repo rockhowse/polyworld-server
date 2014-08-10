@@ -141,7 +141,7 @@ public:
 
 signals:
 	void ended();
-    void stepChanged(int simStep, agent * sendAgent);
+    void stepChanged(int simStep, agent * sendAgent, float sceneRotation);
     void agentBirth(agent * sendAgent);
     void agentDeath(agent * sendAgent);
 	

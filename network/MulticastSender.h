@@ -71,8 +71,8 @@ public:
 private slots:
     void ttlChanged(int newTtl);
     void startSending();
-    void sendDatagram(agent *sendAgent, int msgType);
-    void setStep(int curStep, agent *sendAgent);
+    void sendDatagram(agent *sendAgent, int msgType, float sceneRotation);
+    void setStep(int curStep, agent *sendAgent, float sceneRotation);
     void agentBirthMsg(agent *sendAgent);
     void agentDeathMsg(agent *sendAgent);
 

@@ -55,6 +55,7 @@
 #include "Logs.h"
 #include "Metabolism.h"
 #include "MonitorManager.h"
+#include "Monitor.h"
 #include "proplib.h"
 #include "Queue.h"
 #include "RandomNumberGenerator.h"
@@ -809,9 +810,28 @@ void TSimulation::Step()
     agent* lastAgent;
     objectxsortedlist::gXSortedObjects.lastObj(AGENTTYPE, (gobject**) &lastAgent );
 
+    //get scene rotation
+    float sceneRotation = 0.0;
+
+    citfor( Monitors, monitorManager->getMonitors(), it )
+    {
+        Monitor *_monitor = *it;
+
+        switch( _monitor->getType() )
+        {
+        case Monitor::SCENE:
+            {
+                SceneMonitor *monitor = dynamic_cast<SceneMonitor *>( _monitor );
+                CameraController *_cameraController = monitor->getCameraController();
+                sceneRotation = _cameraController->getRotationAngle();
+            }
+            break;
+        }
+    }
+
     // notify the network clients the step has increased
     // added a push of the last agent's coordinates
-    emit stepChanged(fStep, lastAgent);
+    emit stepChanged(fStep, lastAgent, sceneRotation);
 }
 
 //---------------------------------------------------------------------------

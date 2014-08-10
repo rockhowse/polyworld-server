@@ -97,13 +97,13 @@ void MulticastSender::ttlChanged(int newTtl)
  * @param curStep
  * @param sendAgent
  */
-void MulticastSender::setStep(int curStep, agent * sendAgent)
+void MulticastSender::setStep(int curStep, agent * sendAgent, float sceneRotation)
 {
     simStep = curStep;
 
     if(sendMulticast) {
         // send the dataGram
-        sendDatagram(sendAgent,MSG_TYPE_STEP);
+        sendDatagram(sendAgent,MSG_TYPE_STEP, sceneRotation);
     }
 }
 
@@ -117,7 +117,7 @@ void MulticastSender::agentBirthMsg(agent * sendAgent)
 {
     if(sendMulticast) {
         // send the dataGram
-        sendDatagram(sendAgent,MSG_TYPE_AGENT_BIRTH);
+        sendDatagram(sendAgent,MSG_TYPE_AGENT_BIRTH, 0.0);
     }
 }
 
@@ -131,7 +131,7 @@ void MulticastSender::agentDeathMsg(agent * sendAgent)
 {
     if(sendMulticast) {
         // send the dataGram
-        sendDatagram(sendAgent,MSG_TYPE_AGENT_DEATH);
+        sendDatagram(sendAgent,MSG_TYPE_AGENT_DEATH, 0.0);
     }
 }
 
@@ -143,9 +143,8 @@ void MulticastSender::startSending()
     //timer->start(1000);
 }
 
-void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
+void MulticastSender::sendDatagram(agent * sendAgent, int msgType, float sceneRotation)
 {
-
     switch(msgType) {
 
         // on a step send all agent locations
@@ -157,6 +156,7 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
                 struct SimStepHeader {
                     int simStep;
                     int agentCount;
+                    float sceneRotation;
                 };
 
                 struct SimAgentData {
@@ -173,13 +173,15 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
                 SimStepHeader *ssh = new SimStepHeader();
                 ssh->simStep = simStep;
                 ssh->agentCount = agentCount;
+                ssh->sceneRotation = sceneRotation;
 
                 QByteArray datagram;
                 QDataStream out(&datagram, QIODevice::WriteOnly);
                 out.setVersion(QDataStream::Qt_4_3);
                 out << MSG_TYPE_STEP
                     << ssh->simStep
-                    << ssh->agentCount;
+                    << ssh->agentCount
+                    << ssh->sceneRotation;
 
                 SimAgentData *sad = new SimAgentData();
 

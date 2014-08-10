@@ -97,3 +97,8 @@ void CameraController::setAgentTrackingTarget()
 				
 	}
 }
+
+// need this so that we can send the rotation and set it on the other side
+float CameraController::getRotationAngle() {
+    return rotationState.angle;
+}

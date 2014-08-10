@@ -188,8 +188,6 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
                 objectxsortedlist::gXSortedObjects.reset();
                 while (objectxsortedlist::gXSortedObjects.nextObj(AGENTTYPE, (gobject**)&a))
                 {
-                    memset(&sad, 0, sizeof(SimAgentData));
-
                     sad->agentNum = sendAgent->Number();
                     sad->agentX = sendAgent->x();
                     sad->agentY = sendAgent->y();

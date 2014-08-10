@@ -3263,6 +3263,10 @@ void TSimulation::CreateAgents( void )
 				fScheduler.postSerial( new UpdateStats(newAgent) );
 
 				Birth( newAgent, LifeSpan::BR_CREATE );
+
+                // send the agent birth signal
+                // MulticastSender listens to this
+                emit agentBirth(newAgent);
             }
         }
 
@@ -3349,6 +3353,10 @@ void TSimulation::CreateAgents( void )
             //newAgents.add(newAgent); // add it to the full list later; the e->listLink that gets auto stored here must be replaced with one from full list below
 
 			Birth( newAgent, LifeSpan::BR_CREATE );
+
+            // send the agent birth signal
+            // MulticastSender listens to this
+            emit agentBirth(newAgent);
         }
 
         debugcheck( "after global agent creations" );

@@ -70,11 +70,10 @@ public:
 
 private slots:
     void ttlChanged(int newTtl);
-    void startSending();
-    void sendDatagram(agent *sendAgent, int msgType, float sceneRotation);
-    void setStep(int curStep, agent *sendAgent, float sceneRotation);
+    void startSending();\
     void agentBirthMsg(agent *sendAgent);
     void agentDeathMsg(agent *sendAgent);
+    void simStepMsg(int curStep, agent *sendAgent, float sceneRotation);
 
 private:
     QLabel *statusLabel;
@@ -89,6 +88,7 @@ private:
     int messageNo;
     int simStep;
     bool sendMulticast;
+    void sendDatagram(agent *sendAgent, int msgType, float sceneRotation);
 };
 
 #endif

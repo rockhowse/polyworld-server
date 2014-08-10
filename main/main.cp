@@ -141,13 +141,16 @@ int main( int argc, char** argv )
         multicastSender.show();
 
         // send the multicast step number over the network
-        QObject::connect(simulation, SIGNAL(stepChanged(int, agent*, float sceneRotation)), &multicastSender, SLOT(setStep(int, agent*, float sceneRotation)));
+        QObject::connect(simulation, SIGNAL(stepChanged(int, agent*, float)),
+                         &multicastSender, SLOT(simStepMsg(int, agent*, float)));
 
         // send the multicast agent birth over the network
-        QObject::connect(simulation, SIGNAL(agentBirth(agent*)), &multicastSender, SLOT(agentBirthMsg(agent*)));
+        QObject::connect(simulation, SIGNAL(agentBirth(agent*)),
+                         &multicastSender, SLOT(agentBirthMsg(agent*)));
 
         // send the multicast agent death over the network
-        QObject::connect(simulation, SIGNAL(agentDeath(agent*)), &multicastSender, SLOT(agentDeathMsg(agent*)));
+        QObject::connect(simulation, SIGNAL(agentDeath(agent*)),
+                         &multicastSender, SLOT(agentDeathMsg(agent*)));
 
         // we HAVE to have this after the connectors are linked up so the birth signals get sent
         // initialize the world objects (ground/agents/bricks)

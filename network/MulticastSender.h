@@ -45,6 +45,7 @@
 #include <QHostAddress>
 
 #include <agent.h>
+#include <objectxsortedlist.h>
 
 QT_BEGIN_NAMESPACE
 class QDialogButtonBox;

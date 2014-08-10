@@ -154,8 +154,12 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
             // have to use explicit block due to
             // http://stackoverflow.com/questions/5685471/error-jump-to-case-label
             {
-                struct SimDataPacket {
+                struct SimStepHeader {
                     int simStep;
+                    int agentCount;
+                };
+
+                struct SimAgentData {
                     long  agentNum;
                     float agentX;
                     float agentY;
@@ -164,29 +168,45 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
                 };
 
 
-                SimDataPacket *sdp = new SimDataPacket();
+                int agentCount = objectxsortedlist::gXSortedObjects.getCount(AGENTTYPE);
 
-                sdp->simStep = simStep;
-                sdp->agentNum = sendAgent->Number();
-                sdp->agentX = sendAgent->x();
-                sdp->agentY = sendAgent->y();
-                sdp->agentZ = sendAgent->z();
-                sdp->agentYaw = sendAgent->yaw();
+                SimStepHeader *ssh = new SimStepHeader();
+                ssh->simStep = simStep;
+                ssh->agentCount = agentCount;
 
                 QByteArray datagram;
                 QDataStream out(&datagram, QIODevice::WriteOnly);
                 out.setVersion(QDataStream::Qt_4_3);
                 out << MSG_TYPE_STEP
-                    << sdp->simStep
-                    << qint64(sdp->agentNum)
-                    << sdp->agentX
-                    << sdp->agentY
-                    << sdp->agentZ
-                    << sdp->agentYaw;
+                    << ssh->simStep
+                    << ssh->agentCount;
+
+                SimAgentData *sad = new SimAgentData();
+
+                agent *a;
+
+                objectxsortedlist::gXSortedObjects.reset();
+                while (objectxsortedlist::gXSortedObjects.nextObj(AGENTTYPE, (gobject**)&a))
+                {
+                    memset(&sad, 0, sizeof(SimAgentData));
+
+                    sad->agentNum = sendAgent->Number();
+                    sad->agentX = sendAgent->x();
+                    sad->agentY = sendAgent->y();
+                    sad->agentZ = sendAgent->z();
+                    sad->agentYaw = sendAgent->yaw();
+
+                    out << qint64(sad->agentNum)
+                        << sad->agentX
+                        << sad->agentY
+                        << sad->agentZ
+                        << sad->agentYaw;
+                }
 
                 udpSocket->writeDatagram(datagram, groupAddress, 45454);
 
-                delete(sdp);
+                delete(sad);
+                delete(ssh);
             }
         break;
 

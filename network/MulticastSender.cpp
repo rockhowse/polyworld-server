@@ -188,11 +188,11 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType)
                 objectxsortedlist::gXSortedObjects.reset();
                 while (objectxsortedlist::gXSortedObjects.nextObj(AGENTTYPE, (gobject**)&a))
                 {
-                    sad->agentNum = sendAgent->Number();
-                    sad->agentX = sendAgent->x();
-                    sad->agentY = sendAgent->y();
-                    sad->agentZ = sendAgent->z();
-                    sad->agentYaw = sendAgent->yaw();
+                    sad->agentNum = a->Number();
+                    sad->agentX = a->x();
+                    sad->agentY = a->y();
+                    sad->agentZ = a->z();
+                    sad->agentYaw = a->yaw();
 
                     out << qint64(sad->agentNum)
                         << sad->agentX

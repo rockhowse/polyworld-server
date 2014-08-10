@@ -2805,6 +2805,60 @@ moc_MulticastSender.cpp: ../Qt/5.3/gcc_64/include/QtWidgets/QDialog \
 		../Qt/5.3/gcc_64/include/QtNetwork/QHostAddress \
 		../Qt/5.3/gcc_64/include/QtNetwork/qhostaddress.h \
 		../Qt/5.3/gcc_64/include/QtNetwork/qabstractsocket.h \
+		agent/agent.h \
+		agent/AgentAttachedData.h \
+		agent/AgentListener.h \
+		brain/Brain.h \
+		brain/NeuralNetRenderer.h \
+		brain/NeuronModel.h \
+		utils/objectlist.h \
+		proplib/proplib.h \
+		proplib/builder.h \
+		proplib/dom.h \
+		proplib/interpreter.h \
+		proplib/expression.h \
+		proplib/cppprops.h \
+		utils/datalib.h \
+		utils/misc.h \
+		utils/Variant.h \
+		proplib/editor.h \
+		proplib/overlay.h \
+		proplib/schema.h \
+		proplib/writer.h \
+		proplib/parser.h \
+		app/debug.h \
+		environment/Energy.h \
+		graphics/gcamera.h \
+		graphics/gsquare.h \
+		graphics/gobject.h \
+		utils/error.h \
+		graphics/graphics.h \
+		utils/gdlink.h \
+		genome/Genome.h \
+		genome/GenomeLayout.h \
+		genome/GenomeSchema.h \
+		genome/GeneSchema.h \
+		genome/Gene.h \
+		genome/NeurGroupType.h \
+		utils/Scalar.h \
+		utils/graybin.h \
+		app/globals.h \
+		utils/AbstractFile.h \
+		graphics/gmisc.h \
+		graphics/gpolygon.h \
+		graphics/gscene.h \
+		graphics/gstage.h \
+		agent/LifeSpan.h \
+		brain/Nerve.h \
+		brain/NervousSystem.h \
+		brain/Sensor.h \
+		utils/objectxsortedlist.h \
+		environment/food.h \
+		environment/FoodPatch.h \
+		environment/FoodType.h \
+		environment/Patch.h \
+		environment/brick.h \
+		environment/BrickPatch.h \
 		network/MulticastSender.h
 	/home/mint/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/mint/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/mint/polyworld-server -I/home/mint/polyworld-server -I/home/mint/polyworld-server/agent -I/home/mint/polyworld-server/app -I/home/mint/polyworld-server/brain -I/home/mint/polyworld-server/brain/groups -I/home/mint/polyworld-server/brain/sheets -I/home/mint/polyworld-server/complexity -I/home/mint/polyworld-server/critter -I/home/mint/polyworld-server/environment -I/home/mint/polyworld-server/genome -I/home/mint/polyworld-server/genome/groups -I/home/mint/polyworld-server/genome/sheets -I/home/mint/polyworld-server/graphics -I/home/mint/polyworld-server/logs -I/home/mint/polyworld-server/monitor -I/home/mint/polyworld-server/network -I/home/mint/polyworld-server/proplib -I/home/mint/polyworld-server/ui -I/home/mint/polyworld-server/ui/gui -I/home/mint/polyworld-server/ui/network -I/home/mint/polyworld-server/ui/term -I/home/mint/polyworld-server/utils -I/usr/include/python2.7 -I/home/mint/Qt/5.3/gcc_64/include -I/home/mint/Qt/5.3/gcc_64/include/QtOpenGL -I/home/mint/Qt/5.3/gcc_64/include/QtWidgets -I/home/mint/Qt/5.3/gcc_64/include/QtNetwork -I/home/mint/Qt/5.3/gcc_64/include/QtGui -I/home/mint/Qt/5.3/gcc_64/include/QtCore network/MulticastSender.h -o moc_MulticastSender.cpp
 
@@ -14875,7 +14929,61 @@ MulticastSender.o: network/MulticastSender.cpp ../Qt/5.3/gcc_64/include/QtWidget
 		../Qt/5.3/gcc_64/include/QtNetwork/qtnetworkversion.h \
 		network/MulticastSender.h \
 		../Qt/5.3/gcc_64/include/QtWidgets/QDialog \
-		../Qt/5.3/gcc_64/include/QtNetwork/QHostAddress
+		../Qt/5.3/gcc_64/include/QtNetwork/QHostAddress \
+		agent/agent.h \
+		agent/AgentAttachedData.h \
+		agent/AgentListener.h \
+		brain/Brain.h \
+		brain/NeuralNetRenderer.h \
+		brain/NeuronModel.h \
+		utils/objectlist.h \
+		proplib/proplib.h \
+		proplib/builder.h \
+		proplib/dom.h \
+		proplib/interpreter.h \
+		proplib/expression.h \
+		proplib/cppprops.h \
+		utils/datalib.h \
+		utils/misc.h \
+		utils/Variant.h \
+		proplib/editor.h \
+		proplib/overlay.h \
+		proplib/schema.h \
+		proplib/writer.h \
+		proplib/parser.h \
+		app/debug.h \
+		environment/Energy.h \
+		graphics/gcamera.h \
+		graphics/gsquare.h \
+		graphics/gobject.h \
+		utils/error.h \
+		graphics/graphics.h \
+		utils/gdlink.h \
+		genome/Genome.h \
+		genome/GenomeLayout.h \
+		genome/GenomeSchema.h \
+		genome/GeneSchema.h \
+		genome/Gene.h \
+		genome/NeurGroupType.h \
+		utils/Scalar.h \
+		utils/graybin.h \
+		app/globals.h \
+		utils/AbstractFile.h \
+		graphics/gmisc.h \
+		graphics/gpolygon.h \
+		graphics/gscene.h \
+		graphics/gstage.h \
+		agent/LifeSpan.h \
+		brain/Nerve.h \
+		brain/NervousSystem.h \
+		brain/Sensor.h \
+		utils/objectxsortedlist.h \
+		environment/food.h \
+		environment/FoodPatch.h \
+		environment/FoodType.h \
+		environment/Patch.h \
+		environment/brick.h \
+		environment/BrickPatch.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MulticastSender.o network/MulticastSender.cpp
 
 moc_Simulation.o: moc_Simulation.cpp 

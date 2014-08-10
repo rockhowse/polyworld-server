@@ -1016,10 +1016,6 @@ void TSimulation::InitAgents()
 			fScheduler.postSerial( new UpdateStats(c) );
 
 			Birth( c, LifeSpan::BR_SIMINIT );
-
-            // send the agent birth signal
-            // MulticastSender listens to this
-            emit agentBirth(c);
 		}
 
 		numSeededTotal += numSeededDomain;
@@ -1087,10 +1083,6 @@ void TSimulation::InitAgents()
 		fScheduler.postSerial( new UpdateStats(c) );
 
 		Birth(c, LifeSpan::BR_SIMINIT );
-
-        // send the agent birth signal
-        // MulticastSender listens to this
-        emit agentBirth(c);
 	}
 }
 
@@ -3263,10 +3255,6 @@ void TSimulation::CreateAgents( void )
 				fScheduler.postSerial( new UpdateStats(newAgent) );
 
 				Birth( newAgent, LifeSpan::BR_CREATE );
-
-                // send the agent birth signal
-                // MulticastSender listens to this
-                emit agentBirth(newAgent);
             }
         }
 
@@ -3353,10 +3341,6 @@ void TSimulation::CreateAgents( void )
             //newAgents.add(newAgent); // add it to the full list later; the e->listLink that gets auto stored here must be replaced with one from full list below
 
 			Birth( newAgent, LifeSpan::BR_CREATE );
-
-            // send the agent birth signal
-            // MulticastSender listens to this
-            emit agentBirth(newAgent);
         }
 
         debugcheck( "after global agent creations" );
@@ -3614,6 +3598,10 @@ void TSimulation::Birth( agent* a,
 						 agent* a_parent1,
 						 agent* a_parent2 )
 {
+    // send the agent birth signal
+    // MulticastSender listens to this
+    emit agentBirth(a);
+
 	AgentBirthEvent birthEvent( a, reason, a_parent1, a_parent2 );
 
 	// ---

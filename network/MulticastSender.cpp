@@ -178,6 +178,7 @@ void MulticastSender::sendDatagram(agent * sendAgent, int msgType, float sceneRo
                 QByteArray datagram;
                 QDataStream out(&datagram, QIODevice::WriteOnly);
                 out.setVersion(QDataStream::Qt_4_3);
+
                 out << MSG_TYPE_STEP
                     << ssh->simStep
                     << ssh->agentCount

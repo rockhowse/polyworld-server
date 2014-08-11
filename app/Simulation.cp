@@ -812,6 +812,7 @@ void TSimulation::Step()
 
     //get scene rotation
     float sceneRotation = 0.0;
+    bool foundMonitor = false;
 
     citfor( Monitors, monitorManager->getMonitors(), it )
     {
@@ -822,10 +823,18 @@ void TSimulation::Step()
         case Monitor::SCENE:
             {
                 SceneMonitor *monitor = dynamic_cast<SceneMonitor *>( _monitor );
-                CameraController *_cameraController = monitor->getCameraController();
-                sceneRotation = _cameraController->getRotationAngle();
+
+                if(!strcmp(monitor->getName(), "Main")){
+                    CameraController *_cameraController = monitor->getCameraController();
+                    sceneRotation = _cameraController->getRotationAngle();
+                    foundMonitor = true;
+                }
             }
             break;
+        }
+
+        if(foundMonitor){
+            break; // from iteration
         }
     }
 

@@ -3993,7 +3993,11 @@ void TSimulation::updateFittest( agent *c )
 void TSimulation::AddFood( long domainNumber, long patchNumber )
 {
 	food *f = fDomains[domainNumber].fFoodPatches[patchNumber].addFood( fStep );
-	if( f != NULL )
+
+    // notify food grown
+    emit foodAdded(f);
+
+    if( f != NULL )
 	{
 		fDomains[domainNumber].foodCount++;
 		FoodEnergyIn( f->getEnergy() );
@@ -4005,6 +4009,10 @@ void TSimulation::AddFood( long domainNumber, long patchNumber )
 //-------------------------------------------------------------------------------------------
 void TSimulation::RemoveFood( food *f )
 {
+
+    // notify food grown
+    emit foodRemoved(f);
+
 	FoodPatch *fp = f->getPatch();
 	if( fp ) fp->foodCount--;
 

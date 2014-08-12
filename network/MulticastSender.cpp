@@ -101,9 +101,78 @@ void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRota
 {
     simStep = curStep;
 
+    // Every step we want to send the following
+    //
+    // A. Header
+    //  1. simulation step
+    //  2. number of agents
+    //  3. the current rotation of the Main scene
+    //
+    // B. AgentData
+    //  1. agent's unique number
+    //  2. agent's X position
+    //  3. agent's Y position
+    //  4. agent's Z position
+    //  5. agent's Yaw
+
     if(sendMulticast) {
-        // send the dataGram
-        sendDatagram(sendAgent,MSG_TYPE_STEP, sceneRotation);
+
+        struct SimStepHeader {
+            int simStep;
+            int agentCount;
+            float sceneRotation;
+        };
+
+        struct SimAgentData {
+            long  agentNum;
+            float agentX;
+            float agentY;
+            float agentZ;
+            float agentYaw;
+        };
+
+
+        int agentCount = objectxsortedlist::gXSortedObjects.getCount(AGENTTYPE);
+
+        SimStepHeader *ssh = new SimStepHeader();
+        ssh->simStep = simStep;
+        ssh->agentCount = agentCount;
+        ssh->sceneRotation = sceneRotation;
+
+        QByteArray datagram;
+        QDataStream out(&datagram, QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_4_3);
+
+        out << MSG_TYPE_STEP
+            << ssh->simStep
+            << ssh->agentCount
+            << ssh->sceneRotation;
+
+        SimAgentData *sad = new SimAgentData();
+
+        agent *a;
+
+        objectxsortedlist::gXSortedObjects.reset();
+        while (objectxsortedlist::gXSortedObjects.nextObj(AGENTTYPE, (gobject**)&a))
+        {
+            sad->agentNum = a->Number();
+            sad->agentX = a->x();
+            sad->agentY = a->y();
+            sad->agentZ = a->z();
+            sad->agentYaw = a->yaw();
+
+            out << qint64(sad->agentNum)
+                << sad->agentX
+                << sad->agentY
+                << sad->agentZ
+                << sad->agentYaw;
+        }
+
+        udpSocket->writeDatagram(datagram, groupAddress, 45454);
+
+        delete(sad);
+        delete(ssh);
+
     }
 }
 
@@ -115,9 +184,38 @@ void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRota
  */
 void MulticastSender::agentBirthMsg(agent * sendAgent)
 {
+    // on a birth, send the following data from the agent so it can be created on the other side.
+    //
+    // 1. agentID
+    // 2. height
+    // 3. width
+    // 4. age (?)
+    // ?. anything else set at birth
+
     if(sendMulticast) {
-        // send the dataGram
-        sendDatagram(sendAgent,MSG_TYPE_AGENT_BIRTH, 0.0);
+
+        struct AgentBirthPacket {
+            long    agentNum;
+            float   agentHeight;
+            float   agentSize;
+        };
+
+        AgentBirthPacket * abp = new AgentBirthPacket();
+        abp->agentNum       = sendAgent->Number();
+        abp->agentHeight    = sendAgent->Height();
+        abp->agentSize      = sendAgent->Size();
+
+        QByteArray datagram;
+        QDataStream out(&datagram, QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_4_3);
+        out << MSG_TYPE_AGENT_BIRTH
+            << qint64(abp->agentNum)
+            << abp->agentHeight
+            << abp->agentSize;
+
+        udpSocket->writeDatagram(datagram, groupAddress, 45454);
+
+        delete(abp);
     }
 }
 
@@ -129,9 +227,28 @@ void MulticastSender::agentBirthMsg(agent * sendAgent)
  */
 void MulticastSender::agentDeathMsg(agent * sendAgent)
 {
+    // On a death, send the following data so the agent can be removed from the client
+    // 1. agentNum
+    // ?. anything else needed to smite the agent
+
     if(sendMulticast) {
-        // send the dataGram
-        sendDatagram(sendAgent,MSG_TYPE_AGENT_DEATH, 0.0);
+
+        struct AgentDeathPacket {
+            long    agentNum;
+        };
+
+        AgentDeathPacket * adp = new AgentDeathPacket();
+        adp->agentNum       = sendAgent->Number();
+
+        QByteArray datagram;
+        QDataStream out(&datagram, QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_4_3);
+        out << MSG_TYPE_AGENT_DEATH
+            << qint64(adp->agentNum);
+
+        udpSocket->writeDatagram(datagram, groupAddress, 45454);
+
+        delete(adp);
     }
 }
 
@@ -141,132 +258,4 @@ void MulticastSender::startSending()
     sendMulticast = true;
     startButton->setEnabled(false);
     //timer->start(1000);
-}
-
-void MulticastSender::sendDatagram(agent * sendAgent, int msgType, float sceneRotation)
-{
-    switch(msgType) {
-
-        // on a step send all agent locations
-        case MSG_TYPE_STEP:
-
-            // have to use explicit block due to
-            // http://stackoverflow.com/questions/5685471/error-jump-to-case-label
-            {
-                struct SimStepHeader {
-                    int simStep;
-                    int agentCount;
-                    float sceneRotation;
-                };
-
-                struct SimAgentData {
-                    long  agentNum;
-                    float agentX;
-                    float agentY;
-                    float agentZ;
-                    float agentYaw;
-                };
-
-
-                int agentCount = objectxsortedlist::gXSortedObjects.getCount(AGENTTYPE);
-
-                SimStepHeader *ssh = new SimStepHeader();
-                ssh->simStep = simStep;
-                ssh->agentCount = agentCount;
-                ssh->sceneRotation = sceneRotation;
-
-                QByteArray datagram;
-                QDataStream out(&datagram, QIODevice::WriteOnly);
-                out.setVersion(QDataStream::Qt_4_3);
-
-                out << MSG_TYPE_STEP
-                    << ssh->simStep
-                    << ssh->agentCount
-                    << ssh->sceneRotation;
-
-                SimAgentData *sad = new SimAgentData();
-
-                agent *a;
-
-                objectxsortedlist::gXSortedObjects.reset();
-                while (objectxsortedlist::gXSortedObjects.nextObj(AGENTTYPE, (gobject**)&a))
-                {
-                    sad->agentNum = a->Number();
-                    sad->agentX = a->x();
-                    sad->agentY = a->y();
-                    sad->agentZ = a->z();
-                    sad->agentYaw = a->yaw();
-
-                    out << qint64(sad->agentNum)
-                        << sad->agentX
-                        << sad->agentY
-                        << sad->agentZ
-                        << sad->agentYaw;
-                }
-
-                udpSocket->writeDatagram(datagram, groupAddress, 45454);
-
-                delete(sad);
-                delete(ssh);
-            }
-        break;
-
-        // on a birth, send the following data from the agent so it can be created on the other side.
-        //
-        // 1. agentID
-        // 2. height
-        // 3. width
-        // 4. age (?)
-        // ?. anything else set at birth
-        case MSG_TYPE_AGENT_BIRTH:
-            {
-                struct AgentBirthPacket {
-                    long    agentNum;
-                    float   agentHeight;
-                    float   agentSize;
-                };
-
-                AgentBirthPacket * abp = new AgentBirthPacket();
-                abp->agentNum       = sendAgent->Number();
-                abp->agentHeight    = sendAgent->Height();
-                abp->agentSize      = sendAgent->Size();
-
-                QByteArray datagram;
-                QDataStream out(&datagram, QIODevice::WriteOnly);
-                out.setVersion(QDataStream::Qt_4_3);
-                out << MSG_TYPE_AGENT_BIRTH
-                    << qint64(abp->agentNum)
-                    << abp->agentHeight
-                    << abp->agentSize;
-
-                udpSocket->writeDatagram(datagram, groupAddress, 45454);
-
-                delete(abp);
-            }
-            break;
-
-        // On a death, send the following data so the agent can be removed from the client
-        // 1. agentID
-        // ?. anything else needed to smite the agent
-        case MSG_TYPE_AGENT_DEATH:
-            {
-                struct AgentDeathPacket {
-                    long    agentNum;
-                };
-
-                AgentDeathPacket * adp = new AgentDeathPacket();
-                adp->agentNum       = sendAgent->Number();
-
-                QByteArray datagram;
-                QDataStream out(&datagram, QIODevice::WriteOnly);
-                out.setVersion(QDataStream::Qt_4_3);
-                out << MSG_TYPE_AGENT_DEATH
-                    << qint64(adp->agentNum);
-
-                udpSocket->writeDatagram(datagram, groupAddress, 45454);
-
-                delete(adp);
-            }
-            break;
-    }
 }

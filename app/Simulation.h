@@ -144,6 +144,8 @@ signals:
     void stepChanged(int simStep, agent * sendAgent, float sceneRotation);
     void agentBirth(agent * sendAgent);
     void agentDeath(agent * sendAgent);
+    void foodAdded(food * sendFood);
+    void foodRemoved(food * sendFood);
 	
 private:
 	void InitCppProperties( proplib::Document *docWorldFile );

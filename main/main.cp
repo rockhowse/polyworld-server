@@ -138,7 +138,7 @@ int main( int argc, char** argv )
 	if( ui == "gui" )
 	{
         MulticastSender multicastSender;
-        multicastSender.show();
+        //multicastSender.show();
 
         // send the multicast step number over the network
         QObject::connect(simulation, SIGNAL(stepChanged(int, agent*, float)),
@@ -152,6 +152,14 @@ int main( int argc, char** argv )
         QObject::connect(simulation, SIGNAL(agentDeath(agent*)),
                          &multicastSender, SLOT(agentDeathMsg(agent*)));
 
+        // send the multicast food add over the network
+        QObject::connect(simulation, SIGNAL(foodAdded(food*)),
+                         &multicastSender, SLOT(foodAddMsg(food*)));
+
+        // send the multicast food add over the network
+        QObject::connect(simulation, SIGNAL(foodRemoved(food*)),
+                         &multicastSender, SLOT(foodRemoveMsg(food*)));
+
         // we HAVE to have this after the connectors are linked up so the birth signals get sent
         // initialize the world objects (ground/agents/bricks)
         simulation->InitWorld();
@@ -161,7 +169,7 @@ int main( int argc, char** argv )
 
         // network code
         NetworkDialog networkDialog;
-        networkDialog.show();
+        //networkDialog.show();
         qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 
         exitval = app.exec();

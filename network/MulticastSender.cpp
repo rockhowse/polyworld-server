@@ -252,6 +252,86 @@ void MulticastSender::agentDeathMsg(agent * sendAgent)
     }
 }
 
+/**
+ * This will send the data needed to add a food object to the scene
+ *
+ * @brief foodAddMessage
+ * @param sendFood
+ */
+void MulticastSender::foodAddMsg(food * sendFood) {
+    // on a birth, send the following data from the agent so it can be created on the other side.
+    //
+    // 1. foodNum
+    // 2. height
+    // 3. width (?)
+    // 4. X
+    // 5. Y
+    // 6. Z
+
+    if(sendMulticast) {
+
+        struct AddFoodPacket {
+            long    foodNum;
+            float   foodHeight;
+            float   foodX;
+            float   foodY;
+            float   foodZ;
+        };
+
+        AddFoodPacket * afp = new AddFoodPacket();
+        afp->foodNum       = sendFood->Number();
+        afp->foodHeight    = sendFood->gFoodHeight;
+        afp->foodX         = sendFood->x();
+        afp->foodY         = sendFood->y();
+        afp->foodZ         = sendFood->z();
+
+        QByteArray datagram;
+        QDataStream out(&datagram, QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_4_3);
+        out << MSG_TYPE_FOOD_ADD
+            << qint64(afp->foodNum)
+            << afp->foodHeight
+            << afp->foodX
+            << afp->foodY
+            << afp->foodZ;
+
+        udpSocket->writeDatagram(datagram, groupAddress, 45454);
+
+        delete(afp);
+
+    }
+}
+
+/**
+ * This will remove a food item from all clients.
+ *
+ * @brief MulticastSender::foodRemoveMsg
+ * @param sendFood
+ */
+void MulticastSender::foodRemoveMsg(food * sendFood) {
+    // On a food removal, send the following data so the food can be removed from the client
+    // 1. foodNum
+    if(sendMulticast) {
+
+        struct FoodRemovePacket {
+            long    foodNum;
+        };
+
+        FoodRemovePacket * frp = new FoodRemovePacket();
+        frp->foodNum       = sendFood->Number();
+
+        QByteArray datagram;
+        QDataStream out(&datagram, QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_4_3);
+        out << MSG_TYPE_FOOD_REMOVE
+            << qint64(frp->foodNum);
+
+        udpSocket->writeDatagram(datagram, groupAddress, 45454);
+
+        delete(frp);
+    }
+}
+
 
 void MulticastSender::startSending()
 {

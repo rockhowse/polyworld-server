@@ -60,6 +60,8 @@ QT_END_NAMESPACE
 #define MSG_TYPE_STEP        0
 #define MSG_TYPE_AGENT_BIRTH 1
 #define MSG_TYPE_AGENT_DEATH 2
+#define MSG_TYPE_FOOD_ADD    3
+#define MSG_TYPE_FOOD_REMOVE 4
 
 class MulticastSender : public QDialog
 {
@@ -71,9 +73,14 @@ public:
 private slots:
     void ttlChanged(int newTtl);
     void startSending();\
+
+    void simStepMsg(int curStep, agent *sendAgent, float sceneRotation);
+
     void agentBirthMsg(agent *sendAgent);
     void agentDeathMsg(agent *sendAgent);
-    void simStepMsg(int curStep, agent *sendAgent, float sceneRotation);
+
+    void foodAddMsg(food * sendFood);
+    void foodRemoveMsg(food * sendFood);
 
 private:
     QLabel *statusLabel;

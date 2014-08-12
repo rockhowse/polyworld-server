@@ -40,6 +40,7 @@ public:
 	static float gMaxFoodRadius;
 	static float gCarryFood2Energy;
 	static long gMaxLifeSpan;
+    long Number();
 
 	typedef list<food *> FoodList;
 	static FoodList gAllFood;
@@ -99,3 +100,4 @@ inline void food::setPatch(FoodPatch* fp) { patch=fp; }
 inline FoodPatch* food::getPatch() { return patch; }
 inline short food::domain() { return fDomain; }
 inline void food::domain(short id) { fDomain = id; }
+inline long food::Number() { return getTypeNumber(); }

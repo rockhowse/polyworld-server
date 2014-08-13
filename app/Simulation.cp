@@ -4010,7 +4010,7 @@ void TSimulation::AddFood( long domainNumber, long patchNumber )
 void TSimulation::RemoveFood( food *f )
 {
 
-    // notify food grown
+    // notify food removed
     emit foodRemoved(f);
 
 	FoodPatch *fp = f->getPatch();

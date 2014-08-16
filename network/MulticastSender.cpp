@@ -214,7 +214,7 @@ void MulticastSender::agentBirthMsg(agent * sendAgent)
         abp->agentNum               = sendAgent->Number();
         abp->agentHeight            = sendAgent->Height();
         abp->agentSize              = sendAgent->Size();
-        abp->agentGeneCacheMaxSpeed = sendAgent->MaxSpeed();
+        abp->agentGeneCacheMaxSpeed = sendAgent->GeneCacheMaxSpeed();
 
         QByteArray datagram;
         QDataStream out(&datagram, QIODevice::WriteOnly);

@@ -221,10 +221,11 @@ private:
 	
 	void ijfitinc(short n, short* i, short* j);
 
-	void Birth( agent* a,
-				LifeSpan::BirthReason reason,
-				agent* a_parent1 = NULL,
-				agent* a_parent2 = NULL );
+    void Birth(agent* a,
+                LifeSpan::BirthReason reason,
+                agent* a_parent1 = NULL,
+                agent* a_parent2 = NULL ,
+                bool sendBirthMsg = false);
  private:
 	void Kill( agent* inAgent,
 			   LifeSpan::DeathReason reason );

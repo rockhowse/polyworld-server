@@ -947,6 +947,10 @@ void TSimulation::InitAgents()
 		virtual void task_exec( TSimulation *sim )
 		{
 			a->grow( sim->fMateWait );
+
+            // since this is called AFTER the birth
+            // we need to emit it here
+            emit sim->agentBirth(a);
 		}
 	};
 
@@ -1044,7 +1048,9 @@ void TSimulation::InitAgents()
 			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			fScheduler.postSerial( new UpdateStats(c) );
 
-			Birth( c, LifeSpan::BR_SIMINIT );
+            // don't send birth message because we haven't grown yet
+            // grow() will emit message
+            Birth( c, LifeSpan::BR_SIMINIT, NULL, NULL, false);
 		}
 
 		numSeededTotal += numSeededDomain;
@@ -1111,7 +1117,9 @@ void TSimulation::InitAgents()
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		fScheduler.postSerial( new UpdateStats(c) );
 
-		Birth(c, LifeSpan::BR_SIMINIT );
+        // don't send birth message because we haven't grown yet
+        // grow() will emit message
+        Birth(c, LifeSpan::BR_SIMINIT, NULL, NULL, false);
 	}
 }
 
@@ -2201,7 +2209,8 @@ void TSimulation::MateLockstep( void )
 		birthPrint( "step %ld: agent # %ld born to %ld & %ld, at (%g,%g,%g), yaw=%g, energy=%g, domain %d (%d & %d)\n",
 			fStep, e->Number(), c->Number(), d->Number(), e->x(), e->y(), e->z(), e->yaw(), e->Energy(), kd, id, jd );
 
-		Birth( e, LifeSpan::BR_LOCKSTEP, c, d );
+        // emit birth message because we have already grown()
+        Birth( e, LifeSpan::BR_LOCKSTEP, c, d, true);
 
 	}	// end of loop 'for( int count=0; count<fLockstepNumBirthsAtTimestep; count++ )'
 }
@@ -2349,7 +2358,9 @@ void TSimulation::Mate( agent *c,
 			//	cout << "            ***** no overlap *****" nl;
 
 			fNumberBornVirtual++;
-			Birth( NULL, LifeSpan::BR_VIRTUAL, c, d );
+
+            // emit birth message because we have already grown()
+            Birth( NULL, LifeSpan::BR_VIRTUAL, c, d, true );
 		}
 		else
 		{
@@ -2420,8 +2431,9 @@ void TSimulation::Mate( agent *c,
 				ttPrint( "age %ld: agent # %ld is born\n", fStep, e->Number() );
 				birthPrint( "step %ld: agent # %ld born to %ld & %ld, at (%g,%g,%g), yaw=%g, energy=%g, domain %d (%d & %d)\n",
 							fStep, e->Number(), c->Number(), d->Number(), e->x(), e->y(), e->z(), e->yaw(), e->Energy(), kd, id, jd );
-
-				Birth( e, LifeSpan::BR_NATURAL, c, d );
+\
+                // emit birth message because we have already grown()
+                Birth( e, LifeSpan::BR_NATURAL, c, d, false);
 
 				// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 				// ^^^ PARALLEL TASK GrowAgent
@@ -2443,6 +2455,9 @@ void TSimulation::Mate( agent *c,
 
 						e->SetEnergy(eenergy);
 						e->SetFoodEnergy(eenergy);
+
+                        // we were already born, so sending birth msg after we have grown
+                        emit sim->agentBirth(e);
 					}
 				};
 
@@ -3234,6 +3249,10 @@ void TSimulation::CreateAgents( void )
 					virtual void task_exec( TSimulation *sim )
 					{
 						a->grow( sim->fMateWait );
+
+                        // since we are growing AFTER the birth,
+                        // emit birth message here
+                        emit sim->agentBirth(a);
 					}
 				};
 
@@ -3283,7 +3302,7 @@ void TSimulation::CreateAgents( void )
 				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				fScheduler.postSerial( new UpdateStats(newAgent) );
 
-				Birth( newAgent, LifeSpan::BR_CREATE );
+                Birth( newAgent, LifeSpan::BR_CREATE, false );
             }
         }
 
@@ -3369,7 +3388,8 @@ void TSimulation::CreateAgents( void )
 	    	fNewLifes++;
             //newAgents.add(newAgent); // add it to the full list later; the e->listLink that gets auto stored here must be replaced with one from full list below
 
-			Birth( newAgent, LifeSpan::BR_CREATE );
+            // we have already grown, so lets notify the world of our birth
+            Birth( newAgent, LifeSpan::BR_CREATE, NULL, NULL, true );
         }
 
         debugcheck( "after global agent creations" );
@@ -3625,11 +3645,14 @@ void TSimulation::ijfitinc(short n, short* i, short* j)
 void TSimulation::Birth( agent* a,
 						 LifeSpan::BirthReason reason,
 						 agent* a_parent1,
-						 agent* a_parent2 )
+                         agent* a_parent2,
+                         bool sendBirthMsg)
 {
     // send the agent birth signal
     // MulticastSender listens to this
-    emit agentBirth(a);
+    if(sendBirthMsg) {
+        emit agentBirth(a);
+    }
 
 	AgentBirthEvent birthEvent( a, reason, a_parent1, a_parent2 );
 

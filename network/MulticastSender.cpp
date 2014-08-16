@@ -129,6 +129,9 @@ void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRota
             float agentY;
             float agentZ;
             float agentYaw;
+            float agentRedChannel;
+            float agentGreenChannel;
+            float agentBlueChannel;
         };
 
 
@@ -160,12 +163,18 @@ void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRota
             sad->agentY = a->y();
             sad->agentZ = a->z();
             sad->agentYaw = a->yaw();
+            sad->agentRedChannel = a->GetRed();
+            sad->agentGreenChannel = a->GetGreen();
+            sad->agentBlueChannel = a->GetBlue();
 
             out << qint64(sad->agentNum)
                 << sad->agentX
                 << sad->agentY
                 << sad->agentZ
-                << sad->agentYaw;
+                << sad->agentYaw
+                << sad->agentRedChannel
+                << sad->agentGreenChannel
+                << sad->agentBlueChannel;
         }
 
         udpSocket->writeDatagram(datagram, groupAddress, 45454);

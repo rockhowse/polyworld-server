@@ -189,6 +189,7 @@ public:
     float VelocityZ();
 	float Speed();
 	float MaxSpeed();
+    float GeneCacheMaxSpeed();
 	float NormalizedSpeed();
 	float NormalizedYaw();
     float Mass();
@@ -368,6 +369,7 @@ inline float agent::VelocityY() { return fVelocity[1]; }
 inline float agent::VelocityZ() { return fVelocity[2]; }
 inline float agent::Speed() { return fSpeed; }
 inline float agent::MaxSpeed() { return fMaxSpeed; }
+inline float agent::GeneCacheMaxSpeed() { return geneCache.maxSpeed; }
 inline float agent::NormalizedSpeed() { return min( 1.0f, Speed() / agent::config.maxVelocity ); }
 inline float agent::Mass() { return fMass; }
 inline float agent::SizeAdvantage() { return fSizeAdvantage; }

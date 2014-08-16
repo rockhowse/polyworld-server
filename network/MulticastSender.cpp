@@ -207,12 +207,14 @@ void MulticastSender::agentBirthMsg(agent * sendAgent)
             long    agentNum;
             float   agentHeight;
             float   agentSize;
+            float   agentGeneCacheMaxSpeed;
         };
 
         AgentBirthPacket * abp = new AgentBirthPacket();
-        abp->agentNum       = sendAgent->Number();
-        abp->agentHeight    = sendAgent->Height();
-        abp->agentSize      = sendAgent->Size();
+        abp->agentNum               = sendAgent->Number();
+        abp->agentHeight            = sendAgent->Height();
+        abp->agentSize              = sendAgent->Size();
+        abp->agentGeneCacheMaxSpeed = sendAgent->MaxSpeed();
 
         QByteArray datagram;
         QDataStream out(&datagram, QIODevice::WriteOnly);
@@ -220,7 +222,8 @@ void MulticastSender::agentBirthMsg(agent * sendAgent)
         out << MSG_TYPE_AGENT_BIRTH
             << qint64(abp->agentNum)
             << abp->agentHeight
-            << abp->agentSize;
+            << abp->agentSize
+            << abp->agentGeneCacheMaxSpeed;
 
         udpSocket->writeDatagram(datagram, groupAddress, 45454);
 

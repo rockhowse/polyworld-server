@@ -114,15 +114,46 @@ void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRota
     //  3. agent's Y position
     //  4. agent's Z position
     //  5. agent's Yaw
+    //  6. agent's Red
+    //  7. agent's Green
+    //  8. agent's Blue
+    //
+    // C. FoodData
+    // 1. food's unique number
+    // 2. food's size
 
     if(sendMulticast) {
+
+        // initialize the datagram
+        QByteArray datagram;
+        QDataStream out(&datagram, QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_4_3);
+
+        //////////// STEP HEADER /////////////
+        int agentCount = objectxsortedlist::gXSortedObjects.getCount(AGENTTYPE);
+        int foodCount = objectxsortedlist::gXSortedObjects.getCount(FOODTYPE);
 
         struct SimStepHeader {
             int simStep;
             int agentCount;
+            int foodCount;
             float sceneRotation;
         };
 
+        SimStepHeader *ssh = new SimStepHeader();
+        ssh->simStep = simStep;
+        ssh->agentCount = agentCount;
+        ssh->foodCount = foodCount;
+        ssh->sceneRotation = sceneRotation;
+
+        out << MSG_TYPE_STEP
+            << ssh->simStep
+            << ssh->agentCount
+            << ssh->sceneRotation;
+
+        delete(ssh);
+
+        ///////////////// Agent /////////////////
         struct SimAgentData {
             long  agentNum;
             float agentX;
@@ -133,23 +164,6 @@ void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRota
             float agentGreenChannel;
             float agentBlueChannel;
         };
-
-
-        int agentCount = objectxsortedlist::gXSortedObjects.getCount(AGENTTYPE);
-
-        SimStepHeader *ssh = new SimStepHeader();
-        ssh->simStep = simStep;
-        ssh->agentCount = agentCount;
-        ssh->sceneRotation = sceneRotation;
-
-        QByteArray datagram;
-        QDataStream out(&datagram, QIODevice::WriteOnly);
-        out.setVersion(QDataStream::Qt_4_3);
-
-        out << MSG_TYPE_STEP
-            << ssh->simStep
-            << ssh->agentCount
-            << ssh->sceneRotation;
 
         SimAgentData *sad = new SimAgentData();
 
@@ -177,11 +191,38 @@ void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRota
                 << sad->agentBlueChannel;
         }
 
-        udpSocket->writeDatagram(datagram, groupAddress, 45454);
-
         delete(sad);
-        delete(ssh);
 
+        //////////////// FOOD ////////////////
+        struct SimFoodData {
+            long foodNum;
+            float foodXLen;
+            float foodYLen;
+            float foodZLen;
+        };
+
+        SimFoodData *sfd = new SimFoodData();
+
+        food *f;
+
+        objectxsortedlist::gXSortedObjects.reset();
+        while (objectxsortedlist::gXSortedObjects.nextObj(FOODTYPE, (gobject**)&f))
+        {
+            sfd->foodNum = f->Number();
+            sfd->foodXLen = f->getlenx();
+            sfd->foodYLen = f->getleny();
+            sfd->foodZLen = f->getlenz();
+
+            out << qint64(sfd->foodNum)
+                << sfd->foodXLen
+                << sfd->foodYLen
+                << sfd->foodZLen;
+        }
+
+        delete(sfd);
+
+        // send the data
+        udpSocket->writeDatagram(datagram, groupAddress, 45454);
     }
 }
 

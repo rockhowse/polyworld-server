@@ -120,7 +120,9 @@ void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRota
     //
     // C. FoodData
     // 1. food's unique number
-    // 2. food's size
+    // 2. food's X length
+    // 3. food's Y length
+    // 4. food's Z length
 
     if(sendMulticast) {
 
@@ -149,9 +151,8 @@ void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRota
         out << MSG_TYPE_STEP
             << ssh->simStep
             << ssh->agentCount
+            << ssh->foodCount
             << ssh->sceneRotation;
-
-        delete(ssh);
 
         ///////////////// Agent /////////////////
         struct SimAgentData {
@@ -191,8 +192,6 @@ void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRota
                 << sad->agentBlueChannel;
         }
 
-        delete(sad);
-
         //////////////// FOOD ////////////////
         struct SimFoodData {
             long foodNum;
@@ -219,10 +218,12 @@ void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRota
                 << sfd->foodZLen;
         }
 
-        delete(sfd);
-
         // send the data
         udpSocket->writeDatagram(datagram, groupAddress, 45454);
+
+        delete(sad);
+        delete(sfd);
+        delete(ssh);
     }
 }
 

@@ -31,7 +31,17 @@ class objectxsortedlist : public gdlist<gobject*>
     gdlink<gobject*> *markedBrick;	
 
  public:
-    objectxsortedlist() { markedAgent = 0; markedFood = 0; markedBrick = 0; }
+    objectxsortedlist() {
+        markedAgent = 0;
+        markedFood = 0;
+        markedBrick = 0;
+
+        // these were originall missing
+        // initializing to zero here
+        agentCount = 0;
+        foodCount = 0;
+        brickCount = 0;
+    }
     ~objectxsortedlist() { }
     void add( gobject* a );
     void removeCurrentObject();

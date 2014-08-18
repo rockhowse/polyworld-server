@@ -46,7 +46,7 @@ GrayCoding          True
 MaxSteps        200000
 SeedAgents      0
 AgentsAreFood   True
-EnableCarry     True
+EnableCarry     False
 InitAgents      50
 MinAgents       1
 MaxAgents       100

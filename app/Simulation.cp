@@ -3807,7 +3807,9 @@ void TSimulation::Kill( agent* c,
 			else
 			{
 				food* f = new food( carcassFoodType, fStep, foodEnergy, c->x(), c->z() );
-				Q_CHECK_PTR( f );
+                emit foodAdded(f);
+
+                Q_CHECK_PTR( f );
 				gdlink<gobject*> *saveCurr = objectxsortedlist::gXSortedObjects.getcurr();
 				objectxsortedlist::gXSortedObjects.add( f );	// dead agent becomes food
 				objectxsortedlist::gXSortedObjects.setcurr( saveCurr );
@@ -4017,11 +4019,11 @@ void TSimulation::AddFood( long domainNumber, long patchNumber )
 {
 	food *f = fDomains[domainNumber].fFoodPatches[patchNumber].addFood( fStep );
 
-    // notify food grown
-    emit foodAdded(f);
-
     if( f != NULL )
 	{
+        // notify food grown
+        emit foodAdded(f);
+
 		fDomains[domainNumber].foodCount++;
 		FoodEnergyIn( f->getEnergy() );
 	}

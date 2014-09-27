@@ -21,6 +21,7 @@
 // Network
 #include "NetworkDialog.h"
 #include "MulticastSender.h"
+#include "Server.h"
 
 using namespace std;
 
@@ -171,6 +172,9 @@ int main( int argc, char** argv )
         NetworkDialog networkDialog;
         //networkDialog.show();
         qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+
+        // testing full TCP server
+        Server server;
 
         exitval = app.exec();
         delete mainWindow;

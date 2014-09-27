@@ -19,6 +19,7 @@ signals:
 private:
     int socketDescriptor;
     QString text;
+    bool clientConnected;
 };
 
 #endif // NETWORK_THREAD_H

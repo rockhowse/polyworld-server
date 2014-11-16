@@ -168,6 +168,9 @@ void Genome::crossover( Genome *g1, Genome *g2, bool mutate )
 		return;
 	}
 
+    if( numCrossPoints == 1)
+        numCrossPoints = 2;  // make room for minimum number of crossover points
+
 	// Sanity checking
 	assert( numCrossPoints <= GenomeSchema::config.maxNumCpts );
     

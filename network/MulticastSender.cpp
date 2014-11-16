@@ -95,9 +95,9 @@ void MulticastSender::ttlChanged(int newTtl)
  *
  * @brief MulticastSender::setStep
  * @param curStep
- * @param sendAgent
+ * @param sceneRotation
  */
-void MulticastSender::simStepMsg(int curStep, agent * sendAgent, float sceneRotation)
+void MulticastSender::simStepMsg(int curStep, float sceneRotation)
 {
     simStep = curStep;
 

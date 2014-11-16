@@ -807,9 +807,6 @@ void TSimulation::Step()
 
 	logs->postEvent( StepEndEvent() );
 
-    agent* lastAgent;
-    objectxsortedlist::gXSortedObjects.lastObj(AGENTTYPE, (gobject**) &lastAgent );
-
     //get scene rotation
     float sceneRotation = 0.0;
     bool foundMonitor = false;
@@ -840,7 +837,7 @@ void TSimulation::Step()
 
     // notify the network clients the step has increased
     // added a push of the last agent's coordinates
-    emit stepChanged(fStep, lastAgent, sceneRotation);
+    emit stepChanged(fStep, sceneRotation);
 }
 
 //---------------------------------------------------------------------------

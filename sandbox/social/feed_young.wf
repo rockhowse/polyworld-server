@@ -47,8 +47,8 @@ MaxSteps        200000
 SeedAgents      0
 AgentsAreFood   True
 EnableCarry     False
-InitAgents      10
-MinAgents       1
+InitAgents      0
+MinAgents       0
 MaxAgents       50
 
 RecordContacts True

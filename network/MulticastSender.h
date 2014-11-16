@@ -74,7 +74,7 @@ private slots:
     void ttlChanged(int newTtl);
     void startSending();\
 
-    void simStepMsg(int curStep, agent *sendAgent, float sceneRotation);
+    void simStepMsg(int curStep, float sceneRotation);
 
     void agentBirthMsg(agent *sendAgent);
     void agentDeathMsg(agent *sendAgent);

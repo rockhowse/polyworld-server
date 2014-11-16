@@ -141,7 +141,7 @@ public:
 
 signals:
 	void ended();
-    void stepChanged(int simStep, agent * sendAgent, float sceneRotation);
+    void stepChanged(int simStep, float sceneRotation);
     void agentBirth(agent * sendAgent);
     void agentDeath(agent * sendAgent);
     void foodAdded(food * sendFood);

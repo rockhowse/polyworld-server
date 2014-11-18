@@ -12,6 +12,8 @@ class Server: public QObject
     public slots:
       void acceptConnection();
       void startRead();
+      void sendStep();
+      void closeClient();
     private:
       QTcpServer server;
       QTcpSocket* client;

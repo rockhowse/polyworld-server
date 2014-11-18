@@ -30,5 +30,26 @@ void Server::startRead()
   client->read(buffer, client->bytesAvailable());
   printf("%s", buffer);
   //cout >> buffer >> endl;
-  client->close();
+  //client->close();
+}
+
+// sends a step message to the client
+void Server::sendStep(){
+    if(client) {
+        qint64 msgBytes = 1024;
+
+        char buffer[msgBytes] = {0};
+
+        strcpy(buffer, "Derp");
+
+        client->write(buffer, msgBytes);
+   }
+}
+
+
+// closes the client connection
+void Server::closeClient() {
+    if(client) {
+        client->close();
+    }
 }

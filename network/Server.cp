@@ -36,16 +36,13 @@ void Server::startRead()
 // sends a step message to the client
 void Server::sendStep(){
     if(client) {
-        qint64 msgBytes = 1024;
-
-        char buffer[msgBytes] = {0};
+        char buffer[1024] = {0};
 
         strcpy(buffer, "Derp");
 
-        client->write(buffer, msgBytes);
+        client->write(buffer, 1024);
    }
 }
-
 
 // closes the client connection
 void Server::closeClient() {

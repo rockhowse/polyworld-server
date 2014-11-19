@@ -141,6 +141,13 @@ int main( int argc, char** argv )
         MulticastSender multicastSender;
         //multicastSender.show();
 
+        // testing full TCP server
+        Server server;
+
+        // send the multicast step number over the network
+        QObject::connect(simulation, SIGNAL(stepChanged(int, agent*, float)),
+                         &server, SLOT(sendStep()));
+
         // send the multicast step number over the network
         QObject::connect(simulation, SIGNAL(stepChanged(int, agent*, float)),
                          &multicastSender, SLOT(simStepMsg(int, agent*, float)));
@@ -172,9 +179,6 @@ int main( int argc, char** argv )
         NetworkDialog networkDialog;
         //networkDialog.show();
         qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
-
-        // testing full TCP server
-        Server server;
 
         exitval = app.exec();
         delete mainWindow;

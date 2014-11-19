@@ -145,12 +145,12 @@ int main( int argc, char** argv )
         Server server;
 
         // send the multicast step number over the network
-        QObject::connect(simulation, SIGNAL(stepChanged(int, agent*, float)),
-                         &server, SLOT(sendStep()));
+        QObject::connect(simulation, SIGNAL(stepChanged(int, float)),
+                         &server, SLOT(sendStep(int, float)));
 
         // send the multicast step number over the network
-        QObject::connect(simulation, SIGNAL(stepChanged(int, agent*, float)),
-                         &multicastSender, SLOT(simStepMsg(int, agent*, float)));
+        QObject::connect(simulation, SIGNAL(stepChanged(int, float)),
+                         &multicastSender, SLOT(simStepMsg(int, float)));
 
         // send the multicast agent birth over the network
         QObject::connect(simulation, SIGNAL(agentBirth(agent*)),

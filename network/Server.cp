@@ -34,13 +34,15 @@ void Server::startRead()
 }
 
 // sends a step message to the client
-void Server::sendStep(){
+void Server::sendStep(int simStep, float sceneRotation){
     if(client) {
         char buffer[1024] = {0};
 
         strcpy(buffer, "Derp");
 
-        client->write(buffer, 1024);
+        qint64 bytes_sent = client->write(buffer, 1024);
+
+        qint64 derp = 27;
    }
 }
 

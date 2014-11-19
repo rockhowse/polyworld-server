@@ -12,7 +12,7 @@ class Server: public QObject
     public slots:
       void acceptConnection();
       void startRead();
-      void sendStep();
+      void sendStep(int simStep, float sceneRotation);
       void closeClient();
     private:
       QTcpServer server;
